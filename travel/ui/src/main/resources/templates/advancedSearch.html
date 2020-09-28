@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+
+    <title>Search</title>
+
+
+    <!-- Our Custom CSS -->
+
+    <link rel="stylesheet" th:href="@{/css/style3.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-select.css}"/>
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+
+
+    <!--<script th:src="@{/js/login.js}"></script>-->
+
+</head>
+
+<body>
+
+<div class="wrapper ">
+    <!-- Sidebar  -->
+    <nav id="sidebar" class=" search-sidebar ">
+
+        <div id="dismiss">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+
+        <ul class="login-html list-unstyled components">
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1"
+                                                                                     class="tab">Search</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Panel</label>
+
+            <div class="login-form">
+                <div class="sign-in-htm" style="background-color: inherit!important;">
+                    <ul class="list-unstyled components" style="background-color: inherit!important;">
+                        <li>
+                            <form method="get" enctype="multipart/form-data" th:action="@{'/find/journey'}"
+                                  th:object="${parameters}">
+                                <div class="sidebar-header">
+                                    <h3>Journey</h3>
+                                </div>
+
+                                <div class="form-group pr-2 pl-2">
+                                    <label for="checkbox">
+                                    <input class="mb-1" id="checkbox" type="checkbox" th:field="*{active}"
+                                           placeholder="Title">
+                                    Only active journeys</label>
+                                </div>
+                                <div class="form-group pr-2 pl-2">
+                                    <label for="checkbox1">
+                                        <input class="mb-1" id="checkbox1" type="checkbox" th:field="*{byInvitation}"
+                                               placeholder="Title">
+                                        Only open journeys</label>
+                                </div>
+                                <div class="form-group pr-2 pl-2">
+                                    <label for="title">Title:</label>
+                                    <input class="form-control mb-1" id="title" type="text" th:field="*{title}"
+                                           placeholder="Title">
+                                </div>
+
+                                <div class="form-group  pr-2 pl-2">
+                                    <label for="organizator">Journey organizator:</label>
+                                    <select id="organizator" style="    background-color: #000;"
+                                            th:field="*{organizator.username}" data-size="3" data-live-search="true"
+                                            title="Organizator"
+                                            data-live-search-placeholder="Username or e. mail"
+                                            class="form-control mb-1 selectpicker">
+                                        <option th:each="person  : ${users}"
+                                                th:value="${person.username}"
+                                                th:text="${person.username +' ('+person.mail+')'}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group pr-2 pl-2">
+                                    <label for="peopleNumber">Start position:</label>
+                                    <input class="form-control mb-1" id="start" type="text"
+                                           th:field="*{start_position.name}" placeholder="Title">
+
+                                </div>
+
+
+                                <div class="form-group pr-2 pl-2">
+                                    <label for="peopleNumber">Number of people:</label>
+                                    <input class="form-control mb-1" id="peopleNumber" min="0" type="number"
+                                           th:field="*{peopleNumber}" placeholder="Title">
+
+                                </div>
+
+                                <div class="form-group pr-2  pl-2">
+                                    <label for="start_date">Start date:</label>
+                                    <input class="form-control mb-1" id="start_date" type="date"
+                                           th:field="*{start_date}" placeholder="Title">
+                                </div>
+
+
+                                <div class="form-group pr-2  pl-2">
+
+                                    <button type="submit" name="AddTag" class="btn btn-secondary mb-3"><i
+                                            class="fa fa-tag"></i>Tag
+                                    </button>
+
+                                    <div th:each="tag,row :*{tags}" class="input-group mb-3">
+
+                                        <input th:field="*{tags[__${row.index}__].tag}" type="text" class="form-control"
+                                               placeholder="tag" aria-label="Type anything"
+                                               aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button type="submit" th:value="${row.index}" name="DeleteTag"
+                                                    class="btn btn-primary"><span
+                                                    class="glyphicon  glyphicon-minus"></span>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <input type="submit" class="btn btn-primary form-control mb-2" value="Find">
+
+
+                            </form>
+                            <div class="line"></div>
+                        </li>
+                        <li style="background-color: inherit!important;">
+                            <form style="    background:rgba(40,57,101,.9);" method="get" enctype="multipart/form-data"
+                                  th:action="@{'/find/location'}" th:object="${parametersD}">
+                                <div class="sidebar-header">
+                                    <h3>Location</h3>
+                                </div>
+
+                                <div class="form-group pr-2 pl-2" style="background-color: inherit!important;">
+                                    <label for="title">Title:</label>
+                                    <input class="form-control mb-1" id="title1" type="text" th:field="*{name}"
+                                           placeholder="Name">
+                                </div>
+                                <div class="form-group pr-2 pl-2" style="background-color: inherit!important;">
+                                    <label for="title">Title:</label>
+                                    <input class="form-control mb-1" id="title2" type="text" th:field="*{country}"
+                                           placeholder="Country">
+                                </div>
+                                <div class="form-group pr-2 pl-2" style="background-color: inherit!important;">
+                                    <label for="title">Title:</label>
+                                    <input class="form-control mb-1" id="title3" type="text" th:field="*{coordinates}"
+                                           placeholder="Address">
+                                </div>
+                                <div class="form-group pr-2 pl-2" style="background-color: inherit!important;">
+
+                                    <button type="submit" name="AddCategory"
+                                            class="btn btn-secondary form-control mb-3"><i
+                                            class="fa fa-tag"></i>Category
+                                    </button>
+
+
+                                    <div th:each="category,row :*{categories}" class="input-group mb-2"
+                                         style="background-color: inherit!important;">
+
+                                        <select th:field="*{categories[__${row.index}__]}" data-size="5"
+                                                data-live-search="true" title="Please select category"
+                                                data-live-search-placeholder="category"
+                                                class=" form-control selectpicker">
+                                            <option th:each="category : ${T(com.travelsystem.model.dao.Category).values()}"
+                                                    th:value="${category}"
+                                                    th:text="${category}"></option>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button type="submit" th:value="${row.index}" name="DeleteCategory"
+                                                    class="btn btn-primary"><span
+                                                    class="glyphicon  glyphicon-minus"></span>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <input type="submit" class="btn btn-primary form-control mb-2" value="Find">
+
+                            </form>
+                        </li>
+                    </ul>
+
+
+                </div>
+                <div class="sign-up-htm" style="max-height: 100%">
+                    <!--<ul class="list-unstyled components">-->
+
+                    <div id="photoChange"
+                         class="mt-2 justify-content-center align-content-center align-self-center border-bottom">
+                        <div class=" mt-2 text-center justify-content-center align-content-center align-self-center">
+                            <img class="card-img rounded-circle "
+                                 th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}"
+                                 style="max-width: 150px; max-height: 150px" th:alt="${#httpServletRequest.remoteUser}"
+                                 title="Profile page">
+                            <h6 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h6>
+                            <div class="statistics CTAs ">
+                                <div class="stat-info" style="display: flex"><p class="stat-info">Journeys created:</p>
+                                    <p th:object="${organizator}" th:text="${organizator.size()}" class="stat-info">
+                                        0</p></div>
+                                <div class="stat-info" style="display: flex"><p class="stat-info">Journeys
+                                    participated:</p>
+                                    <p th:object="${personPastJourney}" th:text="${personPastJourney.size()}"
+                                       class="stat-info">0</p></div>
+                                <div class="stat-info " style="display: flex"><p class="stat-info">Upcoming:</p>
+                                    <p th:object="${personActiveJourney}" th:text="${personActiveJourney.size()}"
+                                       class="stat-info">0</p></div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <li>
+                        <a href="/profile" class=" text-decoration-none">
+                            <i class="fas fa-user"></i>
+                            Profile
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="/journey" class="text-decoration-none">
+                            <i class="fas fa-road"></i>
+                            Journeys
+                            <span class="badge badge-info" th:if="${requestNumber}>0" th:text="${requestNumber}"></span>
+                        </a>
+                        <a href="/reviews" class="flex-wrap">
+                            <i class="fas fa-readme"></i>
+                            Reviews
+                        </a>
+
+                        <a href="/locations" class="flex-wrap">
+                            <i class="fas fa-address-book"></i>
+                            Locations
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="/find" class="flex-wrap">
+                            <i class="fas fa-search"></i>
+                            Advanced Search
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="/allUsers" class="text-decoration-none ">
+                            <i class="fas fa-people-carry"></i>
+                            Other users
+                        </a>
+                    </li>
+                    <li>
+                        <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-link">
+                            <i class="fas fa-ring"></i>
+                            One page to rule them all
+                        </a>
+                    </li>
+                    <!--</ul>-->
+
+
+                </div>
+            </div>
+
+
+        </ul>
+
+    </nav>
+
+
+    <!-- Page Content  -->
+    <div id="content" class="h-100">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    Search
+                    <span></span>
+                </button>
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                <a class="nav-link  " href="#">Top</a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto d-flex d-inline-flex">
+                        <a class="nav-link black" th:href="@{/profile}"><img class="figure-img" th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" th:alt="${#httpServletRequest.remoteUser}" style="height:19.2px;width: 16px" title="Profile page"></a>
+
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span
+                                    class=" nav-item glyphicon glyphicon-home  black"
+                                    title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" href="/help" target="_blank"><span class=" nav-item glyphicon glyphicon-question-sign black" title="Help"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span
+                                    class=" nav-item glyphicon glyphicon-off black" title="sing out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="row mt-5">
+
+            <div class="col-md-12">
+                <form method="get" th:object="${freeSearch}" th:action="@{'/search'}">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" th:field="*{title}" placeholder="Type anything"
+                               aria-label="Type anything" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" name="free" type="submit"><i
+                                    class="fa fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="head">Results: ( [[__${journeyList.size() + destinationList.size()}__]] found )</div>
+
+        <div class="row justify-content-md-around">
+            <div class="col-md-4">
+                <div class="border-bottom mb-1">Journeys:([[__${journeyList.size()}__]] found)</div>
+                <div class="media border-bottom" th:each="journey,row : ${journeyList}">
+                    <a th:href="@{'/trip/'+${journey.id}}" >
+
+                    <img
+                            th:src="@{__${(journey.thumbnail != null) ? '/tripImage/'+ journey.id : '/images/nopic.png' }__}"
+                            style="max-width:64px;max-height: 64px" class="mr-3" alt="...">
+                    </a>
+                    <div class="media-body">
+                        <h5 class="mt-0" th:text="${journey.title}"></h5>
+                        <p th:text="${'Added: '+ #dates.format(journey.create_date,'yyyy.MM.dd')}"></p>
+                        &nbsp;
+                        <a th:href="@{'/trip/'+${journey.id}}"  th:class="${journey.active ? 'text-success': 'text-danger'}" th:text="${journey.active ? 'Active': 'Closed'} "></a>
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="border-bottom mb-1">Destinations:([[__${destinationList.size()}__]] found)</div>
+
+                <div class="media border-bottom" th:each="journey,row : ${destinationList}">
+                    <img th:src="@{__${(journey.thumbnail != null) ? '/getDestinationImage/'+destinationList[row.index].id: '/images/nopic.png'}__}"
+                         style="max-width:64px;max-height: 64px" class="mr-3" alt="...">
+                    <div class="media-body">
+                        <h5 class="mt-0" th:text="${destinationList[__${row.index}__].name}">Media heading</h5>
+                        &nbsp; <a th:text="${destinationList[__${row.index}__].coordinates}"
+                                  th:href="@{'/browseLocation/'+${destinationList[__${row.index}__].id}}"></a>
+                    </div>
+                </div>
+        </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebar').toggleClass('active');
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+
+
+        $('#dismiss, .overlay').on('click', function () {
+            $('#sidebar').removeClass('active');
+            $('.overlay').removeClass('active');
+        });
+
+        $("#sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+    });
+</script>
+
+</body>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap-select.js}"></script>
+
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+    <title>Reviews</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-select.css}"/>
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+
+        <ul class="list-unstyled components">
+
+            <div id="photoChange" class="mt-2 justify-content-center align-content-center align-self-center border-bottom">
+                <div class=" mt-2 text-center justify-content-center align-content-center align-self-center">
+                    <img class="card-img rounded-circle " th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" style="max-width: 150px; max-height: 150px" th:alt="${#httpServletRequest.remoteUser}"  title="That's you">
+                    <h6 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h6>
+                    <div class="statistics CTAs ">
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys created:</p>
+                            <p th:object="${organizator}" th:text="${organizator.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys participated:</p>
+                            <p th:object="${personPastJourney}" th:text="${personPastJourney.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info " style="display: flex"><p class="stat-info">Upcoming:</p>
+                            <p th:object="${personActiveJourney}" th:text="${personActiveJourney.size()}" class="stat-info">0</p></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <li class="active ">
+                <a href="/profile" class=" text-decoration-none">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+
+            </li>
+            <li>
+                <a href="/journey" class="text-decoration-none">
+                    <i class="fas fa-road"></i>
+                    Journeys
+                    <span class="badge badge-info" th:if="${requestNumber}>0" th:text="${requestNumber}"></span>
+                </a>
+                <a  href="/reviews" class="flex-wrap" >
+                    <i class="fas fa-readme"></i>
+                    Reviews
+                </a>
+
+                <a href="/locations" class="flex-wrap" >
+                    <i class="fas fa-address-book"></i>
+                    Locations
+                </a>
+
+            </li>
+            <li>
+                <a href="/find" class="flex-wrap" >
+                    <i class="fas fa-search"></i>
+                    Advanced Search
+                </a>
+
+            </li>
+            <li>
+                <a href="/allUsers" class="text-decoration-none ">
+                    <i class="fas fa-people-carry"></i>
+                    Other users
+                </a>
+            </li>
+            <li>
+                <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-link">
+                    <i class="fas fa-ring"></i>
+                    One page to rule them all
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info mr-2">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+                <ul class="nav navbar-nav ">
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/"></a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/journey">Journey</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/reviews"><b>Reviews</b>
+                        </a></li>
+
+                </ul>
+
+
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+
+                <a class="nav-link  " href="#">Top</a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Page</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img"
+                                                                                 th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}"
+                                                                                 th:alt="${#httpServletRequest.remoteUser}"
+                                                                                 style="height:19.2px;width: 16px"
+                                                                                 title="That's you"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span
+                                    class=" nav-item glyphicon glyphicon-home  black"
+                                    title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" href="/help" target="_blank"><span class=" nav-item glyphicon glyphicon-question-sign black" title="Help"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span
+                                    class=" nav-item glyphicon glyphicon-off black" title="sign out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="head w-100">Reviews</div>
+<div class="row">
+
+    <div th:each="card :${reviews}" class="col-md-4 col-sm-6 mb-2">
+                    <div class="card" >
+
+                       <a title="open full image" th:href="@{__${(card.image != null) ? '/review/image/'+ card.id : '/images/nopic.png' }__}"> <img class="card-img-top" style="max-height: 20rem;" th:src="@{__${(card.image != null) ? '/review/image/'+ card.id : '/images/nopic.png' }__}" alt="Card image cap"></a>
+
+                        <div class="card-body card">
+                            <h5 class="card-title" th:text="${card.journey.title}">Card title</h5>
+                            <p class="card-text" th:text="${card.text}">Some quick example text to build on the card
+                                title and make up the bulk of the card's content.</p>
+
+                        </div>
+                        <div class="card-footer text-muted">
+                            <p th:text="'Created: '+${#dates.format(card.create_date,'yyyy.MM.dd HH:mm')}"></p>
+                        </div>
+
+                        <div th:if="${not #lists.isEmpty(card.tag)}" class="card-footer text-muted">
+
+                            <div th:each="tag,index :*{card.tag}">
+                                <a th:href="@{'/search/tag/{name}'(name=${tag.tag})}" th:text="'#'+${tag.tag}"></a>
+                                &nbsp;
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-muted">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <form th:action="@{'/delete/review/'+${card.id}}" th:method="delete">
+                                        <button id="delete" class="btn" type="submit"><i class="fa fa-trash" title="delete"></i></button>
+                                    </form>
+                                </div>
+                                <div class="col-auto">
+                                    <form th:action="@{'/review/edit/'+${card.id}}" method="post">
+                                        <button id="edit" class="btn" type="submit"><i class="fa fa-edit" title="edit"></i></button>
+                                    </form>
+                                </div>
+                                <div class="col-auto">
+                                    <a th:href="@{'trip/'+ ${card.journey.id}}" class="btn btn-link"> Journey <i class="fa fa-external-link-alt" title="go to journey page"></i> </a>
+
+                                </div>
+
+                                <div class="col-auto">
+                                    <a th:href="@{'/single/review/'+${card.id}}" class="btn btn-link" title="Open single review"> Review <i class="fa fa-external-link-alt" title="go to review page"></i> </a>
+
+                                </div>
+                                <div class="col-auto">
+                                    <p th:text="${card.rate}+'/5'"></p>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+            </div>
+</div>
+                <div class="justify-content-center text-center" th:if="${#lists.isEmpty(reviews)}">
+
+                    <img alt="bonfire" src="/images/camp1.png">
+                    <p>You haven't write any review yet</p>
+                    <a href="/find"> Check out other journeys and then share opinion</a>
+                </div>
+
+            </div>
+
+
+
+        <div class="col-md-4 ">
+            <div class="head w-100">Create Review</div>
+
+            <form id="reviewform"   class="p-4 border-dark  " style="background-color: whitesmoke"  th:object="${review}" th:action="@{'/review/new'}" method="post" enctype="multipart/form-data">
+                <div class="row">
+
+                    <div class="col">
+
+                        <div class="form-group">
+                            <select th:field="*{journey.id}" required data-live-search="true" title="Please select journey"
+                                    data-live-search-placeholder="Search" class="form-control selectpicker">
+                                <option th:each="journey  : ${journeys}" th:value="${(review.id !=null)? review.journey.id : journey.id}"
+                                        th:text="${(review.id !=null)? review.journey.title : journey.title}">
+                                    </option>
+                            </select>
+
+                            <input style="display: none" type="text" th:field="*{id}">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="md-form input-group mb-3  amber-textarea active-amber-textarea">
+                        <div class="input-group-text">
+                            <label class="label" for="form22">Short description</label>
+                        </div>
+                        <textarea id="form22" th:field="*{text}" class="md-textarea form-control" rows="3"></textarea>
+                    </div>
+
+                </div>
+                <div class="row">
+
+                    <div class="col-auto mb-3 d-flex d-inline-flex">
+                        <label for="file"><i class="fa fa-image"></i> Include image &nbsp; &nbsp;<input
+                                style="display:none;" form="reviewform" id="file" type="file"  name="file"></label>
+
+                    </div>
+
+                </div>
+
+                <div class="row mb-2 ml-1">
+                    <button type="submit" name="AddTag" class="btn btn-secondary mb-3 "><i class="fa fa-tag"></i>Tag
+                    </button>
+
+                    <div th:each="mark,row :*{tag}" class="col mb-3">
+                        <div class="input-group ">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">#</div>
+                            </div>
+                            <input th:field="*{tag[__${row.index}__].tag}" type="text" class="form-control"
+                                   placeholder="tag" aria-label="Type anything" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button type="submit" th:value="${row.index}" name="DeleteTag"
+                                        class="btn btn-primary"><span class="glyphicon  glyphicon-minus"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row text-left">
+                    <div class="col-auto text-left">
+                        Rate journey:
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-auto">
+                        <div class="rate mb-4" >
+                            <input type="radio" id="star5" th:name="*{rate}" th:field="*{rate}" value="5" />
+                            <label for="star5" title="5">5 stars</label>
+                            <input type="radio" id="star4" th:name="*{rate}" th:field="*{rate}" value="4" />
+                            <label for="star4" title="4">4 stars</label>
+                            <input type="radio" id="star3" th:name="*{rate}" th:field="*{rate}" value="3" />
+                            <label for="star3" title="3">3 stars</label>
+                            <input type="radio" id="star2" th:name="*{rate}" th:field="*{rate}" value="2" />
+                            <label for="star2" title="2">2 stars</label>
+                            <input type="radio" id="star1" th:name="*{rate}" th:field="*{rate}" value="1" />
+                            <label for="star1" title="1">1 star</label>
+                        </div>
+                    </div>
+                </div>
+
+
+                <input class="btn btn-primary" type="submit" value="Save review">
+
+
+            </form>
+        </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
+</body>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap-select.js}"></script>
+
+</html>

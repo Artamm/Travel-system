@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Location</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-select.css}"/>
+
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+    <script th:src="@{/js/profile.js}"></script>
+
+
+    <link rel="stylesheet" th:href="@{/css/leaflet.css}" />
+    <script th:src="@{/js/leaflet.js}"></script>
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function (event)  {
+            /*<![CDATA[*/
+
+            var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+            var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+            var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});
+            var corX = /*[[${destination.latlngX}]]*/  0;
+            var corY = /*[[${destination.latlngY}]]*/  0;
+            if(corX === null){
+                corX = 0;
+                corY =0;
+            }
+            var coronaNumber = /*[[${damn}]]*/ 0;
+
+
+            if(coronaNumber<5){
+                document.getElementById("inform").style.backgroundColor="#5cff67";
+                document.getElementById("inform").style.opacity="0.8";
+
+            }
+            if(coronaNumber>5 & coronaNumber<20){
+                document.getElementById("inform").style.backgroundColor="#eaff4b";
+                document.getElementById("inform").style.opacity="0.8";
+
+            }
+            if(coronaNumber>20){
+                document.getElementById("inform").style.backgroundColor="#ff3219";
+                document.getElementById("inform").style.opacity="0.8";
+            }
+
+            var latlng = [ corX, corY];
+            var map = L.map('map', {
+                center: latlng,
+                zoom: 15,
+                layers: [osm]
+            });
+
+            var customicon = L.icon({
+                iconUrl: './../../images/marker-icon-2x.png',
+                iconSize: [25, 25],
+                iconAnchor: [20, 40],
+                popupAnchor: [0, -60]
+            });
+            var marker = L.marker(latlng,{icon: customicon}).addTo(map);        });
+        /*]]>*/
+    </script>
+
+
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+
+        <ul class="list-unstyled components">
+
+            <div id="photoChange" class="mt-2 justify-content-center align-content-center align-self-center border-bottom">
+                <div class=" mt-2 text-center justify-content-center align-content-center align-self-center">
+                    <img class="card-img rounded-circle " th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" style="max-width: 150px; max-height: 150px" th:alt="${#httpServletRequest.remoteUser}"  title="Profile page">
+                    <h6 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h6>
+                    <div class="statistics CTAs ">
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys created:</p>
+                            <p th:object="${organizator}" th:text="${organizator.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys participated:</p>
+                            <p th:object="${personPastJourney}" th:text="${personPastJourney.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info " style="display: flex"><p class="stat-info">Upcoming:</p>
+                            <p th:object="${personActiveJourney}" th:text="${personActiveJourney.size()}" class="stat-info">0</p></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <li class="active ">
+                <a href="/profile" class=" text-decoration-none">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+
+            </li>
+            <li>
+                <a href="/journey" class="text-decoration-none">
+                    <i class="fas fa-road"></i>
+                    Journeys
+                    <span class="badge badge-info" th:if="${requestNumber}>0" th:text="${requestNumber}"></span>
+                </a>
+                <a  href="/reviews" class="flex-wrap" >
+                    <i class="fas fa-readme"></i>
+                    Reviews
+                </a>
+
+                <a href="/locations" class="flex-wrap" >
+                    <i class="fas fa-address-book"></i>
+                    Locations
+                </a>
+
+            </li>
+            <li>
+                <a href="/find" class="flex-wrap" >
+                    <i class="fas fa-search"></i>
+                    Advanced Search
+                </a>
+
+            </li>
+            <li>
+                <a href="/allUsers" class="text-decoration-none ">
+                    <i class="fas fa-people-carry"></i>
+                    Other users
+                </a>
+            </li>
+            <li>
+                <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-link">
+                    <i class="fas fa-ring"></i>
+                    One page to rule them all
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/"></a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/admin">Admin panel</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/adminDestination">Locations</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/addDestination"><b>Create destination</b></a></li>
+
+                </ul>
+
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                <a class="nav-link  " href="#">Top</a>
+
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img" th:src="@{'/profileImage/' }" th:alt="${#httpServletRequest.remoteUser}" style="height:19.2px;width: 16px" title="That's you"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span class=" nav-item glyphicon glyphicon-home  black" title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" href="/help" target="_blank"><span class=" nav-item glyphicon glyphicon-question-sign black" title="Help"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off black" title="sing out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+<div class="row">
+    <div class="col-md-12">
+        <div class="head">
+            <h4>Location information</h4>
+        </div>
+    </div>
+</div>
+
+        <div class="row">
+
+            <div class="col-md-8 col-xs-12">
+                <form th:object="${destination}" class="mb-2 " th:action="@{'/addDestination/'}"  th:method="post">
+
+
+                        <table class="table table-sm">
+                            <tbody>
+                            <tr>
+                                <td><label for="1" class="label">Location:</label></td>
+                                <td><input required  class="disabled" id="1" type="text"  th:field="*{name}">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label for="2" class="label secondary-label">Address: </label>
+                                </td>
+                                <td>
+                                    <input required class=" " id="2" type="text"  th:field="*{coordinates}">
+                                </td>
+                                <td>
+                                    <button id="btn" class="btn btn-secondary mt-1"  name="calc" type="submit" th:value="${destination.coordinates}" > Get coordinates</button>
+                                    <button class="btn btn-success mt-1 " name="Save" type="submit">Save destination</button>
+
+                                </td>
+
+
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label for="2" class="label secondary-label">Coordinated: </label>
+                                </td>
+                                <td>
+                                    <input required class=" "  type="text" readonly th:field="*{latlngX}">
+                                </td>
+                                <td>
+                                    <input required class=" "  type="text" readonly th:field="*{latlngY}">
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td><label>Country</label></td>
+                                <td> <input class=" "  type="text"  th:field="*{country}">
+                                </td>
+
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    <div class="row mb-2">
+                        <button type="submit" name="addCategory" class="btn btn-secondary mb-3"><i
+                                class="fa fa-tag"></i>Category
+                        </button>
+
+                        <div th:each="category,row :*{categories}" class="col-auto mb-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text"><i class="fa fa-tag"></i></div>
+                                </div>
+                                <select th:field="*{categories[__${row.index}__]}" data-size="5" data-live-search="true" title="Please select category"
+                                        data-live-search-placeholder="category"
+                                        class=" selectpicker">
+                                    <option th:each="category : ${T(com.travelsystem.model.dao.Category).values()}"
+                                            th:value="${category}"
+                                            th:text="${category}"></option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="submit"  th:value="${row.index}"  name="DeleteCategory"
+                                            class="btn btn-primary"><span class="glyphicon  glyphicon-minus"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+
+                <div class="col-md-4">
+
+
+                    <p class="p-2 mb-2 border-info" th:if="${damn}"  style="color:white" id="inform" th:text="'In this country there  are cases of coronavirus: '+${damn}">
+                    <p class="p-2 border-info"  th:if="${full_address}"  th:text="'A full address for this location: '+ ${full_address}">
+
+
+
+                </div>
+<!---->
+
+
+        </div>
+<!---->
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head"><h4>On the map</h4></div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div>
+                    <form class="" target="_blank" method="get" action="https://graphhopper.com/maps/">
+                        <div class="form-group ">
+                            <div class="row pb-3 mb-1">
+                                <div class="col-md-5 mb-2">
+                                    <div class="input-group">
+                                        <input class="form-control" id="startaddr" type="text" name="point" placeholder="Your Start Address">
+                                    </div>
+
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <input class="form-control" id="destinationaddr" type="text" th:value="${destination.coordinates}" name="point">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn-booking btn btn-secondary mt-2" type="submit">Find Route</button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div  id="map" style="width: 100%; height: 400px">
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+    </div>
+</div>
+
+<script th:inline="javascript" type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+
+</script>
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap-select.js}"></script>
+</html>

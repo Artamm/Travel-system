@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile page</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/js/profile.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/dist/umd/popper.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+
+
+</head>
+<body class=" container-fluid">
+
+<div class="row header navbar mb-2 ">
+    <div class="col-md-2 col-sm-4">
+        <div>
+            <img class="nav-item img-fluid" alt="logo" src="/images/logo.png" style="height: 40px;">
+            TiS
+        </div>
+    </div>
+    <div class="offset-md-8 offset-sm-0 col-md-2 col-sm-8  text-right align-content-end">
+        <img class="figure-img" th:src="@{'/profileImage/' }" th:alt="${#httpServletRequest.remoteUser}"
+             style="height:19.2px;width: 16px" title="That's you">
+        <span class=" nav-item glyphicon glyphicon-home headerpanel" title="return to the start menu"></span>
+        <span class=" nav-item glyphicon glyphicon-question-sign headerpanel" title="information for users"></span>
+        <a th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off headerpanel" title="sing out"></span></a>
+    </div>
+</div>
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/profile">Profile</a></li>
+
+    </ol>
+</nav>
+
+<div class="row main-body">
+    <div class="col-xs-12 col-md-2 menu-bar">
+        <div id="photoChange" class="mt-2">
+            <div class=" text-center image-upload p-2">
+                <form id="formPhoto" enctype="multipart/form-data" method="POST" th:action="@{/updateImage}"
+                      th:object="${userProfile}">
+                    <label for="file-input"><img class="card-img rounded-circle file-upload-image" id="blah"
+                                                 th:src="@{'/profileImage/' }"
+                                                 style="max-width: 150px; max-height: 150px"
+                                                 th:alt="${#httpServletRequest.remoteUser}" title="That's you">
+                        <figure>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17">
+                                <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path>
+                            </svg>
+                            Upload file
+                        </figure>
+                        <span></span>
+                    </label>
+                    <input style="display: none" id="file-input" accept="image/*" name="file" onchange="readURL(this)"
+                           type="file" required/>
+                    <div><input class="btn btn-info" type="submit"></div>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="col-md-10 col-xs-12">
+        <div class="head">
+            <h4>Personal information</h4>
+        </div>
+        <div th:object="${user}">
+            <form class="mb-2 col-md-6">
+                <table class="table table-sm">
+                    <tbody>
+                    <tr>
+                        <td><label for="1" class="label">Username:</label></td>
+                        <td><input class="disabled" id="1" type="text" readonly th:field="${user.username}"> *Seen for
+                            every user
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label for="2" class="label secondary-label">Name: </label>
+                        </td>
+                        <td>
+                            <input class=" disabled" id="2" type="text" readonly th:field="${user.name}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label class="label">Surname:</label>
+                        </td>
+                        <td>
+                            <input type="text" readonly th:field="${user.surname}">
+                        </td>
+                    </tr>
+                    <p class="secondary-text"> To correct mistakes or change information here - contact administrator.</p>
+                    </tbody>
+                </table>
+
+    </form>
+    <div class="head">
+        <h4>Contact information:</h4>
+    </div>
+    <form class="mb-2" th:action="@{/changeContacts}" method="post">
+
+        <table class="table table-sm">
+            <tbody>
+            <tr>
+                <td>
+                    <label>E. mail:</label>
+                </td>
+                <td>
+                    <input type="email" th:field="*{mail}"/> *Confirmation letter will
+                    be sent on the previous mailbox
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Phone:</label>
+                </td>
+                <td>
+                    <input type="tel" th:field="*{phone}"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-outline-info" type="submit">Save contacts</button>
+
+    </form>
+</div>
+
+<div class="head">
+    <h4>Password</h4>
+</div>
+<form class="mb-2" th:action="@{/changePassword}" method="post" th:object="${passwordChange}">
+    <div>
+    <div class="col-md-12 mb-1"><input type="password" id="pas1" oninput="checkPassword();" placeholder="New password">
+    </div>
+    <div class="col-md-12 mb-2"><input type="password" id="pas2" th:object="${passwordChange}" th:field="*{password}"
+                                       oninput="checkPassword();" placeholder="Repeat password"></div>
+    </div>
+    <div class="col-md-12 mb-2"><p id="inform" style="display:none">Passwords do not match.Please try again.</p></div>
+    <div class="col-md-12 mb-2"><button id="changePas" class="btn btn-outline-info" type="submit" disabled>Save password</button></div>
+</form>
+
+<div class="head">
+    <h4>Preferences</h4>
+</div>
+<form class="mb-2">
+    <div class="col-md-12 mb-1"><input id="notification" type="checkbox"> <label for="notification">Get information on
+        e.mail address</label></div>
+    <div class="col-md-12 mb-1"><input id="real-name" type="checkbox"> <label for="real-name">Hide my real name from
+        users</label></div>
+    <div class="col-md-12 mb-2"><button class="btn btn-outline-info" type="submit">Save changes</button>
+        <button name="delete" class="btn btn-outline-danger" type="submit">Delete profile</button></div>
+
+</form>
+
+</div>
+
+
+</div>
+<button onclick="topFunction()" style="z-index: 99; position: absolute; bottom:0;right: 10px" id="top" title="Go to top">Top</button>
+
+</body>
+</html>

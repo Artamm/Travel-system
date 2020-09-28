@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Locations (Admin panel)</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/"></a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/admin">Admin panel</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/adminDestination">Locations</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/addDestination">Create destination</a></li>
+
+                </ul>
+
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                <a class="nav-link  " href="#">Top</a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img"
+                                                                                 th:src="@{'/profileImage/' }"
+                                                                                 th:alt="${#httpServletRequest.remoteUser}"
+                                                                                 style="height:19.2px;width: 16px"
+                                                                                 title="Profile page"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span
+                                    class=" nav-item glyphicon glyphicon-home  black"
+                                    title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" href="/help" target="_blank"><span class=" nav-item glyphicon glyphicon-question-sign black" title="Help"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span
+                                    class=" nav-item glyphicon glyphicon-off black" title="sing out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+
+
+        <div class="row mb-2 mt-2">
+
+            <div class="col-md-12">
+                <form method="get" th:object="${location}" th:action="@{/admin/find/location/}">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" th:field="*{name}" placeholder="Type id, name,country or address" aria-label="Quick search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" name="free" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+
+            <div class="col-md-12">
+                <table class="table table-view table-sm table-hover">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Categories</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="location, rowIndex : ${locations}">
+                        <td><p th:text="${rowIndex.index +1}"></p></td>
+                        <td><p th:text="${location.id}"></p></td>
+
+                        <td><p th:text="${locations[__${rowIndex.index}__].name}"></p></td>
+                        <td><a th:href="@{'/editLocation/'+${locations[__${rowIndex.index}__].id}}" th:text="${locations[__${rowIndex.index}__].coordinates}"><span
+                                class="glyphicon glyphicon-eye-open"></span> </a>
+                        </td>
+
+                        <td>
+                            <img style="height: 80px;width: 80px" th:src="@{__${(locations[rowIndex.index].thumbnail != null) ? '/getDestinationImage/'+locations[rowIndex.index].id : '/images/nopic.png' }__}">
+                        </td>
+                        <td>
+                            <div th:each="category,row : ${locations[__${rowIndex.index}__].categories}">
+                                <p th:text="${locations[__${rowIndex.index}__].categories[row.index].category}+','"></p>
+                            </div>
+                        </td>
+                        <td>
+                            <form th:method="post" th:action="@{'/AdminDestination/{id}'(id=${locations[__${rowIndex.index}__].id})}">
+
+                                <button class="btn" name="delete">Delete</button>
+                            </form>
+                            <!--<p th:text="${#lists.contains(locationList[__${rowIndex.index}__].roles, T(com.travelsystem.model.dao.Role).ADMIN)} ? 'Administrator' : 'User'"></p>-->
+                        </td>
+
+                        <td th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" sec:authorize="hasAuthority('ADMIN')">
+
+
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>

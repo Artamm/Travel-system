@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <h4>Hello,</h4>
+
+    Thank you for your registration in the travelsystem.
+    If it were not you, please contact administrator by e-mail address: wanifeta@gmail.com
+
+    <hr>
+    <table class="table table-hover">
+
+        <tbody>
+        <tr>
+            <td>Username:</td>
+            <td><span th:text="${username}"></span></td>
+        </tr>
+        <tr>
+            <td>E-mail address:</td>
+            <td><span th:text="${mail}"></span></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><span th:text="${password}"></span></td>
+        </tr>
+
+        <tr>
+            <td>Registration date:</td>
+            <td><span th:text="${registered}"></span></td>
+        </tr>
+
+        </tbody>
+    </table>
+    <hr>
+
+    <h4>Cheers!</h4>
+
+</div>
+
+</body>
+</div>
+
+
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Collapsible sidebar using Bootstrap 4</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img" th:src="@{'/profileImage/' }" th:alt="${#httpServletRequest.remoteUser}" style="height:19.2px;width: 16px" title="That's you"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span class=" nav-item glyphicon glyphicon-home  black" title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off black" title="sing out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <div class="row">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Quick Search">
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+<div class="col-md-8">
+
+</div>
+    <div class="col-md-4">
+
+        <form class="form">
+
+        </form>
+    </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
+</body>
+
+</html>

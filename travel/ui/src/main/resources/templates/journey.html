@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Journeys</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+    <link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+
+        <ul class="list-unstyled components">
+
+            <div id="photoChange" class="mt-2 justify-content-center align-content-center align-self-center border-bottom">
+                <div class=" mt-2 text-center justify-content-center align-content-center align-self-center">
+                    <img class="card-img rounded-circle " th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" style="max-width: 150px; max-height: 150px" th:alt="${#httpServletRequest.remoteUser}"  title="That's you">
+                    <h6 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h6>
+                    <div class="statistics CTAs ">
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys created:</p>
+                            <p th:object="${organizator}" th:text="${organizator.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys participated:</p>
+                            <p th:object="${oldJourney}" th:text="${oldJourney.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info " style="display: flex"><p class="stat-info">Upcoming:</p>
+                            <p th:object="${journeys}" th:text="${journeys.size()}" class="stat-info">0</p></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <li class="active ">
+                <a href="/profile" class=" text-decoration-none">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+
+            </li>
+            <li>
+                <a href="/journey" class="text-decoration-none">
+                    <i class="fas fa-road"></i>
+                    Journeys
+                    <span class="badge badge-info" th:if="${requestNumber}>0" th:text="${requestNumber}"></span>
+                </a>
+                <a  href="/reviews" class="flex-wrap" >
+                    <i class="fas fa-readme"></i>
+                    Reviews
+                </a>
+
+                <a href="/locations" class="flex-wrap" >
+                    <i class="fas fa-address-book"></i>
+                    Locations
+                </a>
+
+            </li>
+            <li>
+                <a href="/find" class="flex-wrap" >
+                    <i class="fas fa-search"></i>
+                    Advanced Search
+                </a>
+
+            </li>
+            <li>
+                <a href="/allUsers" class="text-decoration-none ">
+                    <i class="fas fa-people-carry"></i>
+                    Other users
+                </a>
+            </li>
+            <li>
+                <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-link">
+                    <i class="fas fa-ring"></i>
+                    One page to rule them all
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+
+                <ul class="nav navbar-nav  ">
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/"></a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/journey"><b>Journey</b></a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/journey/new">Create journey</a></li>
+
+                </ul>
+
+
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                <a class="nav-link  " href="#">Top</a>
+
+
+
+
+                <div class="collapse navbar-collapse " id="navbarSupportedContent" >
+                    <ul class="nav navbar-nav ml-auto">
+
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img" th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" th:alt="${#httpServletRequest.remoteUser}" style="height:19.2px;width: 16px" title="That's you"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span class=" nav-item glyphicon glyphicon-home  black" title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" href="/help" target="_blank"><span class=" nav-item glyphicon glyphicon-question-sign black" title="Help"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off black" title="sign out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="row">
+            <div class="col-md-6 request" >
+                <div class="head">
+                    <h5>Opened requests:</h5>
+                </div>
+                <div th:if="${#lists.isEmpty(requests)}" class="mt-4 text-center">
+                    <img alt="bonfire" src="/images/camp1.png">
+                    <p>No sign of the unanswered requests. Great job</p>
+                </div>
+
+
+
+                <div class="upcoming">
+                    <table th:if="${not #lists.isEmpty(requests)}" class="table">
+                        <thead>
+                        <tr src>
+                            <th scope="col">#</th>
+                            <th scope="col">Journey</th>
+                            <th scope="col">Person</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div th:each="trip,rowIndex: ${requests}">
+                            <tr th:each="person,row: ${requests[__${rowIndex.index}__].getRequestedInvitation()}">
+                                <th scope="row" th:text="${row.index+1}" >1</th>
+                                <td><a th:href="@{'/trip/'}+${trip.getId()}" th:text="${trip.title}"> </a></td>
+                                <td><a th:text="${requests[__${rowIndex.index}__].getRequestedInvitation()[__${row.index}__].username}"  th:href="@{'/profileUser/'+ ${requests[__${rowIndex.index}__].getRequestedInvitation()[__${row.index}__].username}}"></a></td>
+                                <td><div class="row flex-wrap mr-1">
+                                    <form method="post" th:action="@{'/acceptRequest/'+${requests[__${rowIndex.index}__].getRequestedInvitation()[__${row.index}__].id} +'/'+${requests[__${rowIndex.index}__].id}}">
+                                        <button type="submit" class="btn btn-success pl-4 pr-4 btn-block">Accept</button>
+                                    </form>
+                                    &nbsp;
+                                    <form method="post" th:action="@{'/declineRequest/'+${requests[__${rowIndex.index}__].getRequestedInvitation()[__${row.index}__].id}+'/'+${requests[__${rowIndex.index}__].id}}">
+                                        <button type="submit" class="btn btn-danger pl-4 pr-4 btn-block">Decline</button>
+                                    </form>
+                                </div>
+                                </td>
+                            </tr>
+
+
+                        </div>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+
+
+            <div class="col-md-6" >
+                <div class="head">
+                    <h5>Invite requests:</h5>
+                </div>
+                <div th:if="${#lists.isEmpty(invited)}" class="mt-4 text-center">
+                    <img alt="bonfire" src="/images/camp1.png">
+                    <p>No sign of the unanswered requests. Great job</p>
+                </div>
+
+                <div class="upcoming">
+                    <table th:if="${not #lists.isEmpty(invited)}" class="table">
+                        <thead>
+                        <tr src>
+                            <th scope="col">#</th>
+                            <th scope="col">Journey</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <div >
+                            <tr  th:each="trip,rowIndex: ${invited}">
+                                <th scope="row" th:text="${rowIndex.index+1}" >1</th>
+                                <td><a th:href="@{'/trip/'}+${trip.getId()}" th:text="${trip.title}"> </a></td>
+                                <td><div class="row flex-wrap mr-1">
+                                    <form method="post" th:action="@{'/acceptInviteRequest' +'/'+${invited[__${rowIndex.index}__].id}}">
+                                        <button type="submit" class="btn btn-success pl-4 pr-4 btn-block">Accept</button>
+                                    </form>
+                                    &nbsp;
+                                    <form method="post" th:action="@{'/declineInviteRequest'+'/'+${invited[__${rowIndex.index}__].id}}">
+                                        <button type="submit" class="btn btn-danger pl-4 pr-4 btn-block">Decline</button>
+                                    </form>
+                                </div>
+                                </td>
+                            </tr>
+
+
+                        </div>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        <div class="line"></div>
+
+        <div class="row mb-2 mt-2">
+
+            <div class="col-md-12">
+                <form method="get" th:object="${search}" th:action="@{/search/journey/mine}">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" th:field="*{title}" placeholder="Type category or tag" aria-label="Quick search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" name="free" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="head">
+                    <h5>Past Journey</h5>
+                </div>
+                <div th:if="${#lists.isEmpty(oldJourney)}" class="mt-4  text-center">
+                    <img alt="bonfire" src="/images/logo.png">
+                    <p>No journeys yet</p>
+                </div>
+
+                <div class="upcoming">
+                    <table th:if="${not #lists.isEmpty(oldJourney)}" class="table">
+                        <thead>
+                        <tr src>
+                            <th scope="col">#</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Event</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+
+                        <tr th:each="trip,rowIndex : ${oldJourney}">
+
+                            <th scope="row" th:text="${rowIndex.index+1}" >1</th>
+                            <td><p type="date" th:text="${#dates.format(trip.start_date,'yyyy.MM.dd')}+' - '+ ${#dates.format(trip.end_date,'yyyy.MM.dd')}"></p></td>
+                            <td><a th:href="@{'/trip/'}+${trip.getId()}"  th:text="${trip.getTitle()}"> </a></td>
+                            <td>
+                                <a th:href="@{'/trip/'}+${trip.getId()}"> <span class="glyphicon glyphicon-eye-open"
+                                                                                title="information"> </span> </a>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="col-md-6">
+                <div class="head">
+                    <h5>Active Journey</h5>
+                </div>
+                <div th:if="${#lists.isEmpty(journeys)}" class="mt-4 text-center">
+                    <img alt="bonfire" src="/images/logo.png">
+                    <p>No journeys yet</p>
+                </div>
+
+                <div class="upcoming">
+                    <table th:if="${not #lists.isEmpty(journeys)}" class="table">
+                        <thead>
+                        <tr src>
+                            <th scope="col">#</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Event</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="trip,rowIndex: ${journeys}">
+                            <th scope="row" th:text="${rowIndex.index+1}" >1</th>
+                            <td><p th:text="${#dates.format(trip.start_date,'yyyy.MM.dd')}+' - '+ ${#dates.format(trip.end_date,'yyyy.MM.dd')}"></p></td>
+                            <td><a th:href="@{'/trip/'}+${trip.getId()}" th:text="${trip.getTitle()}"> </a></td>
+                            <td>
+                                <div class="d-inline-flex">
+
+
+
+                                <form th:if="${journeys[__${rowIndex.index}__].organizator.username} == ${#httpServletRequest.remoteUser}"  method="post" enctype="multipart/form-data" th:action="@{'/edit/trip/'+${trip.id}}">
+                                    <button  type="submit" class="btn btn-success pl-4 pr-4 btn-block"  ><span class="glyphicon glyphicon-edit "></span></button>
+                                </form>
+                                    &nbsp;
+                                <a class="btn btn-info pl-4 pr-4 btn-block" th:href="@{'/trip/'}+${trip.getId()}"> <span class="glyphicon glyphicon-eye-open"
+                                                                                title="information"> </span> </a>
+                                    &nbsp;
+                               <form   th:if="${journeys[__${rowIndex.index}__].organizator.username} == ${#httpServletRequest.remoteUser}" th:method="PUT" th:action="@{'/closeJourney/'+${trip.getId()}}"><button class="btn btn-danger pl-4 pr-4 btn-block"><span class="glyphicon glyphicon-remove-sign" title="close event"> </span></button></form>
+                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="line"></div>
+
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Create journey</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-select.css}"/>
+    <link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+
+    <script th:src="@{/js/createJourney.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+                <ul class="nav navbar-nav ">
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/"></a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/journey">Journey</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/journey/new"><b> Create
+                        journey </b></a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/coordinates"
+                                                   target="_blank">Specify coordinates <i
+                            class="fa fa-external-link-alt"></i></a></li>
+
+
+                </ul>
+
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Page</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img"
+                                                                                 th:src="@{'/profileImage/' }"
+                                                                                 th:alt="${#httpServletRequest.remoteUser}"
+                                                                                 style="height:19.2px;width: 16px"
+                                                                                 title="That's you"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span
+                                    class=" nav-item glyphicon glyphicon-home  black"
+                                    title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span
+                                    class=" nav-item glyphicon glyphicon-off black" title="sign out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+<div th:if="${success}" class="row">
+    <div class="col-md-12">
+
+        <div  class="alert alert-success fade alert-dismissible show" role="alert">
+            <h5 class="alert-heading">Successfully created</h5>
+            You created a new journey. If you invited users, they will get notification.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+    </div>
+</div>
+
+        <div class="row">
+
+            <div class="col-md-7 mb-2 border-bottom">
+
+                <form class="pb-2" enctype="multipart/form-data" th:object="${newJourney}" th:action="@{/AddJourney}"
+                      method="post">
+
+                    <div class="row mb-2">
+                        <div class="head col"><h6>General information</h6></div>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><span class="glyphicon glyphicon-star"></span></div>
+                        </div>
+                        <input type="text" th:field="*{title}" required class="form-control" placeholder="Title"
+                               aria-label="Type anything" aria-describedby="basic-addon2">
+
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-auto mb-1">
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Start date</div>
+                                </div>
+                                <input id="start_date" type="date" class="form-control" required th:field="*{start_date}"
+                                       placeholder="Title" aria-label="Type anything" aria-describedby="basic-addon2">
+
+                            </div>
+                        </div>
+                        <div class="col-auto mb-1">
+                            <div class="input-group ">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">End &nbsp;date</div>
+                                </div>
+                                <input oninput="checkDate()" id="end_date" type="date" class="form-control"
+                                       th:field="*{end_date}" required placeholder="Title" aria-label="Type anything"
+                                       aria-describedby="basic-addon2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2" >
+                        <div class="col-auto border-dark" id="wrong_dates" style="display: none">
+                            <div class="input-group " >
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <i class="fa fa-info-circle"></i>
+                                    </div>
+                                  &nbsp; Your start date is later than end date
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                        <div class="md-form input-group mb-3  amber-textarea active-amber-textarea">
+                            <div class="input-group-text">
+                                <label class="label" for="form22">Short description</label>
+                            </div>
+                            <textarea id="form22" th:field="*{description}" class="md-textarea form-control"
+                                      rows="3"></textarea>
+                        </div>
+
+                        <div class="col-auto mb-3 d-flex d-inline-flex">
+                            <label for="files"><i class="fa fa-image"></i> Include image &nbsp; &nbsp;<input
+                                    style="display:none;" id="files" type="file" name="files"></label>
+                            <label for="file1"><i class="fa fa-file-alt"></i> Include file<input style="display:none;"
+                                                                                                 id="file1" type="file"
+                                                                                                 name="file1"></label>
+                        </div>
+
+                        <div class="row mb-2">
+                            <button type="submit" name="AddTag" class="btn btn-secondary mb-3"><i class="fa fa-tag"></i>Tag
+                            </button>
+
+                            <div th:each="tag,row :*{tags}" class="col mb-3">
+                                <div class="input-group ">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">#</div>
+                                    </div>
+                                    <input th:field="*{tags[__${row.index}__].tag}" type="text" class="form-control"
+                                           placeholder="tag" aria-label="Type anything" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button type="submit" th:value="${row.index}" name="DeleteTag"
+                                                class="btn btn-primary"><span class="glyphicon  glyphicon-minus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row mb-2">
+                            <button type="submit" name="AddCategory" class="btn btn-secondary mb-3"><i
+                                    class="fa fa-tag"></i>Category
+                            </button>
+
+                            <div th:each="category,row :*{categories}" class="col-auto mb-3">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text"><i class="fa fa-tag"></i></div>
+                                    </div>
+                                    <select th:field="*{categories[__${row.index}__]}" data-size="5" data-live-search="true" title="Please select category"
+                                            data-live-search-placeholder="category"
+                                            class=" selectpicker">
+                                        <option th:each="category : ${T(com.travelsystem.model.dao.Category).values()}"
+                                                th:value="${category}"
+                                                th:text="${category}"></option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="submit" th:value="${row.index}" name="DeleteCategory"
+                                                class="btn btn-primary"><span class="glyphicon  glyphicon-minus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="head col"><h6>Participants</h6></div>
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-md-6 border-right">
+                                <label class="tip mb-1" title="Access only for mentioned below users"><input
+                                        type="radio" th:name="*{byInvitation}" th:field="*{byInvitation}"
+                                        th:value="true"><i class="fa fa-door-closed"> </i>By invitations</label>
+                                <div class="col mb-2">
+                                    <button type="submit" id="addButton" name="AddOption" class="btn btn-primary"><i
+                                            class="fa fa-user-plus"></i> Add user
+                                    </button>
+                                </div>
+                                <div th:each="user, rowIndex : *{suggestedPeople}">
+                                    <div class="col mb-1">
+                                        <div class="input-group ">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text"># [[__${rowIndex.index +1}__]]</div>
+                                            </div>
+
+
+
+                                                <select th:field="*{suggestedPeople[__${rowIndex.index}__].username}" data-size="5" data-live-search="true" title="Please select user"
+                                                        data-live-search-placeholder="Username or e. mail"
+                                                        class="form-control selectpicker">
+                                                    <option th:each="person  : ${users}"
+                                                            th:value="${person.username}"
+                                                            th:text="${person.username +' ('+person.mail+')'}"></option>
+                                                </select>
+
+                                            <div class="input-group-append">
+                                                <button class="submit" th:value="${rowIndex.index}" name="DeleteOption">
+                                                    <i class="fa fa-user-minus"></i></button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-6 ">
+                                <label class="tip" title="Free enter for everyone"><input type="radio"
+                                                                                          th:name="*{byInvitation}"
+                                                                                          th:field="*{byInvitation}"
+                                                                                          th:value="false"><i
+                                        class="fa fa-door-open"></i>Opened journey &nbsp;</label>
+                                <label class="tip mb-1" title="Organizator can let or reject user"><input
+                                        type="checkbox" th:field="*{premoderated}"><i class="fa fa-eye-slash"></i>Pre-moderated</label>
+                                <div class="col">
+
+                                    <div class="input-group ">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text"><i class="fa fa-user-friends"></i> Number
+                                            </div>
+                                        </div>
+                                        <input class="participant" th:field="*{peopleNumber}"  type="number" min="1"
+                                               max="100" oninput="LoneWolf()" >
+                                    </div>
+                                    <p id="loneWolf" style="display:none">Lone Wolf, huh? Nice</p>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    <div class="row mt-2" >
+
+                        <div th:each="person,row: *{people}" class="input-group ">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="fa fa-user-friends"></i>
+                                </div>
+                            </div>
+                            <input class="participant" th:field=" *{people[__${row.index}__].username}" readonly type="text">
+                            <div class="input-group-append">
+                                <button type="submit" name="deleteUser" th:value="${row.index}" ><i class="fa fa-crop"></i> </button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <input style="display: none" type="text" th:field="*{id}">
+                    <input style="display: none" type="text" th:field="*{organizator.username}">
+
+
+                        <div class="line"></div>
+                        <div class="row">
+                            <div class="col head"><h6>Destinations</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+
+
+                        </div>
+
+                        <div class="row mb-3">
+
+
+                        </div>
+
+                        <div class="row mb-3 pb-3">
+
+                            <div class="col mb-2">
+                                <button type="submit" title="Add new destination to the route" name="addDestination"
+                                        class="btn btn-primary">
+                                    Add destination
+                                </button>
+                            </div>
+                            <div class="col mb-2">
+                                <button type="submit" name="removeAll"
+                                        title="remove ALL destinations from the list. Cannot be reverted"
+                                        class="btn btn-secondary btn-danger">
+                                    Remove All
+                                </button>
+                            </div>
+
+
+                            <div class="col-auto mb-2">
+                                <button type="button" title="Add start position" class="btn btn-primary"
+                                        data-toggle="modal" th:attr="data-target='#exampleModal'">
+                                    Start position
+                                </button>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" th:id="'exampleModal'" tabindex="-1" role="dialog"
+                                 th:attr="aria-labelledby='exampleModalLabel'" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" th:id="'exampleModalLabel'">Start Position:</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div class="row">
+
+                                                <div class="col head d-flex flex-wrap"><h6>Custom location &nbsp;</h6>
+                                                    <a class="black text-decoration-none" href="/coordinates"
+                                                       target="_blank">
+                                                        <small><i class="fa fa-external-link-alt"
+                                                                  title="check coordinates (new window)"></i></small>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="row p-2 mb-3">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">Address</div>
+                                                    </div>
+                                                    <input type="text" class="form-control"
+                                                           th:field="*{start_position.name}" placeholder=""
+                                                           aria-label="Type anything" aria-describedby="basic-addon2">
+                                                </div>
+
+                                            </div>
+                                            <div class="row  mb-3">
+                                                <div class="col">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">X:</div>
+                                                        </div>
+                                                        <input type="text" class="form-control"
+                                                               th:field="*{start_position.latlngX}" placeholder=""
+                                                               aria-label="Type anything"
+                                                               aria-describedby="basic-addon2">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">Y:</div>
+                                                        </div>
+                                                        <input type="text" class="form-control"
+                                                               th:field="*{start_position.latlngY}" placeholder=""
+                                                               aria-label="Type anything"
+                                                               aria-describedby="basic-addon2">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-auto">
+                                                    <button type=submit class="btn btn-secondary"
+                                                            th:value="*{start_position.coordinates}"
+                                                            name="coordinatesStartPosition"
+                                                            title="Get coordinates by address. For custom locations">
+                                                        Get coordinates
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="head col"><h6>Or select from locations:</h6></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <select th:field="*{start_position.coordinates}" data-size="5" data-live-search="true" title="Please select journey"
+                                                                data-live-search-placeholder="Search"
+                                                                class="form-control selectpicker">
+                                                            <option th:each="location  : ${locations}"
+                                                                    th:value="${location.coordinates}"
+                                                                    th:text="${location.name} +' ('+${location.country}+')'"></option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                            </button>
+                                            <button type="submit" th:value="*{start_position.coordinates}"
+                                                    name="saveChangesDefault" class="btn btn-primary">Save changes
+                                            </button>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div th:each="location,rowIndex :*{route}">
+
+                                <div class="col mb-2 justify-content-end">
+                                    <div>
+                                        <div class="col d-block">
+                                            <button type="button"
+                                                    th:value="${newJourney.route[__${rowIndex.index}__].name}"
+                                                    class="btn btn-primary" data-toggle="modal"
+                                                    th:attr="data-target='#exampleModal'+ __${rowIndex.index}__">
+                                                # [[${rowIndex.index+1}]]
+                                            </button>
+                                        </div>
+                                        <div class="col">
+                                            <button type="submit" th:value="${rowIndex.index}" name="DeleteLocation"
+                                                    class="btn add_button pt-0 justify-content-center text-center">
+                                                <small>&nbsp; <i class="fa  fa-minus"></i></small>
+                                            </button>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Modal -->
+                                <div class="modal fade" th:id="'exampleModal'+ __${rowIndex.index}__" tabindex="-1"
+                                     role="dialog" th:attr="aria-labelledby='exampleModalLabel'+ __${rowIndex.index}__ "
+                                     aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title"
+                                                    th:id="'exampleModalLabel'+__${rowIndex.index}__">Destination #
+                                                    [[${rowIndex.index+1}]]</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="row">
+
+                                                    <div class="col head d-flex flex-wrap"><h6>Custom location
+                                                        &nbsp;</h6>
+                                                        <a class="black text-decoration-none" href="/coordinates"
+                                                           target="_blank">
+                                                            <small><i class="fa fa-external-link-alt"
+                                                                      title="check coordinates (new window)"></i>
+                                                            </small>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="row p-2 mb-3">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <div class="input-group-text">Address</div>
+                                                        </div>
+                                                        <input type="text" class="form-control"
+                                                               th:field="*{route[__${rowIndex.index}__].coordinates}"
+                                                               placeholder="" aria-label="Type anything"
+                                                               aria-describedby="basic-addon2">
+                                                    </div>
+
+                                                </div>
+                                                <div class="row  mb-3">
+                                                    <div class="col">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text">X:</div>
+                                                            </div>
+                                                            <input type="text" class="form-control"
+                                                                   th:field="*{route[__${rowIndex.index}__].latlngX}"
+                                                                   placeholder="" aria-label="Type anything"
+                                                                   aria-describedby="basic-addon2">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <div class="input-group-text">Y:</div>
+                                                            </div>
+                                                            <input type="text" class="form-control"
+                                                                   th:field="*{route[__${rowIndex.index}__].latlngY}"
+                                                                   placeholder="" aria-label="Type anything"
+                                                                   aria-describedby="basic-addon2">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-auto">
+                                                        <button type=submit class="btn btn-secondary"
+                                                                th:value="${rowIndex.index}" name="coordinates"
+                                                                title="Get coordinates by address. For custom locations">
+                                                            Get coordinates
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="head col"><h6>Or select from locations:</h6></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-group">
+                                                            <select th:field="*{route[__${rowIndex.index}__].name}" data-size="5" data-live-search="true"
+                                                                    title="Please select journey"
+                                                                    data-live-search-placeholder="Search"
+                                                                    class="form-control selectpicker">
+                                                                <option th:each="location  : ${locations}"
+                                                                        th:value="${location.coordinates}"
+                                                                        th:text="${location.name}"></option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit" name="saveChanges" th:value="${rowIndex.index}"
+                                                        class="btn btn-primary">Save changes
+                                                </button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <input name="Save" type="submit" class="btn btn-success btn-block p-3">
+                            </div>
+                        </div>
+                </form>
+            </div>
+
+
+            <div class="col-md-5">
+                <div id="floating-panel">
+                    <b>Mode of Travel: </b>
+                    <select id="mode">
+                        <option value="DRIVING">Driving</option>
+                        <option value="WALKING">Walking</option>
+                        <option value="BICYCLING">Bicycling</option>
+                    </select>
+                </div>
+                <div id="map" style="width: 100%; height: 600px; @media (max-width: 768px) {
+                height: 400px;
+                } "></div>
+
+                <script th:inline="javascript">
+                    /*<![CDATA[*/
+                    function initMap() {
+                        var directionsService = new google.maps.DirectionsService;
+                        var directionsRenderer = new google.maps.DirectionsRenderer;
+                        var map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 8,
+                            center: {lat:/*[[${newJourney.start_position.latlngX}]]*/ 0, lng:/*[[${newJourney.start_position.latlngY}]]*/ 0}
+                        });
+
+                        document.getElementById('submit').addEventListener('click', function() {
+                        calculateAndDisplayRoute(directionsService, directionsRenderer);});
+
+                        document.getElementById('mode').addEventListener('change', function() {
+                            calculateAndDisplayRoute(directionsService, directionsRenderer);
+                        });
+                        directionsRenderer.setMap(map);
+
+                        ;}
+                    function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+                        var selectedMode = document.getElementById('mode').value;
+                        var  destinations =/*[[${newJourney.route}]]*/  [];
+                        var waypts = [];
+
+                        /*[# th:each="destination : ${newJourney.route}"]*/
+                        waypts.push({
+                            location: new google.maps.LatLng(/*[[${destination.latlngX}]]*/ 54.7219118,/*[[${destination.latlngY}]]*/25.336616247800787),
+                            stopover: true
+                        });
+
+                        /*[/]*/
+
+                        var length = /*[[__${newJourney.route.size()}__]]*/ 0;
+
+                        var end ="";
+
+                        if(waypts[waypts.length-1] ==null){
+
+
+                        directionsService.route({
+                            origin: {lat:/*[[${newJourney.start_position.latlngX}]]*/ 0, lng:/*[[${newJourney.start_position.latlngY}]]*/ 0},
+                            destination: {lat:/*[[${newJourney.start_position.latlngX}]]*/ 0, lng:/*[[${newJourney.start_position.latlngY}]]*/ 0},
+                            optimizeWaypoints: true,
+                            travelMode: google.maps.TravelMode[selectedMode]
+                        }, function(response, status) {
+                            if (status === 'OK') {
+                                directionsRenderer.setDirections(response);
+                                var route = response.routes[0];
+
+                            } else {
+                                window.alert('Directions request failed due to ' + status);
+                            }
+                        });}else{
+                            var endpoint = waypts[waypts.length-1].location;
+                            directionsService.route({
+                                origin: {lat:/*[[${newJourney.start_position.latlngX}]]*/ 0, lng:/*[[${newJourney.start_position.latlngY}]]*/ 0},
+                                destination: endpoint,
+                                waypoints:waypts,
+                                optimizeWaypoints: true,
+                                travelMode: google.maps.TravelMode[selectedMode]
+                            }, function(response, status) {
+                                if (status === 'OK') {
+                                    directionsRenderer.setDirections(response);
+                                    var route = response.routes[0];
+
+                                } else {
+                                    window.alert('Directions request failed due to ' + status);
+                                }
+                            });
+
+
+
+                        }
+                    }
+
+                    /*]]>*/
+                </script>
+                <script th:inline="javascript" async="async" defer="defer" src="https://maps.googleapis.com/maps/api/js?key=#"
+                ></script>
+
+                <div><input type="submit" id="submit" class="btn btn-block btn-primary p-5 mt-2" value="Display on the map">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+
+    $('input[name$="saveChanges"]').click(function () {
+        location.reload();
+    });
+
+
+</script>
+
+
+</body>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap-select.js}"></script>
+
+</html>

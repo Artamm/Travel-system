@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+    <title>Journey</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</head>
+
+
+
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+
+        <ul class="list-unstyled components">
+
+            <div class=" image-upload p-2 ">
+                <img id="blah" class="card-img img-fluid "
+                     th:src="@{${(trip.thumbnail != null ) ? '/tripImage/'+ '__${trip.id}__' : '/images/nopic.png'}}"
+                     alt="profileImage" style="width:100%">
+            </div>
+
+            <hr/>
+            <li class="active ">
+                <div class="mt-2 small align-content-center justify-content-center text-center p-2 info">
+                    <p th:if="${#lists.contains(trip.people,user)}">You have already signed for this journey</p>
+                    <p th:if="!${#lists.contains(trip.people,user)}">You're not signed for this journey.</p>
+
+                    <hr/>
+                    <form method="post" th:object="${trip}" th:action="@{'/signOff/'+${trip.id}}">
+                        <button type="submit" th:if="${#lists.contains(trip.people,user) and trip.active}"
+                                class="btn btn-block btn-danger small">Decline
+                        </button>
+                    </form>
+
+
+                    <p th:if="${(not #lists.contains(trip.people,user) and trip.byInvitation) and (not #lists.contains(trip.suggestedPeople,user)) }">This trip is by
+                        invitations. You can send request to add you in the list</p>
+                    <form th:if="${(not #lists.contains(trip.people,user) and trip.byInvitation ) and (not #lists.contains(trip.requestedInvitation,user)) and (not #lists.contains(trip.suggestedPeople,user)) }"
+                          th:action="@{'/sendRequest/'+${trip.id}}" method="post">
+                        <button type="submit" th:if="${(!#lists.contains(trip.people,user) and trip.byInvitation) and not trip.premoderated}"
+                                class="btn btn-block btn-info small">Request
+                        </button>
+                    </form>
+                    <p th:if="${#lists.contains(trip.requestedInvitation,user)}">You have sent a request</p>
+                    <form th:if="${#lists.contains(trip.requestedInvitation,user)}"
+                          th:action="@{'/undoRequest/'+${trip.id}}" th:method="put">
+                        <button type="submit" th:if="${#lists.contains(trip.requestedInvitation,user)}"
+                                class="btn btn-block btn-secondary small">Undo request
+                        </button>
+                    </form>
+                    <p th:if="${#lists.contains(trip.suggestedPeople,user)}">You're invited in this journey. You can
+                        participate or decline offer in your "Journey" page</p>
+
+                    <form th:if="${not #lists.contains(trip.people,user) and trip.premoderated and not #lists.contains(trip.requestedInvitation,user) and not #lists.contains(trip.suggestedPeople,user) }"
+                          th:action="@{'/sendRequest/'+${trip.id}}" method="post">
+                        <button type="submit" th:if="${not #lists.contains(trip.people,user) and trip.premoderated}"
+                                class="btn btn-block btn-info small">Request
+                        </button>
+                    </form>
+                    <form th:action="@{'/applyForTrip/'+${trip.id}}" method="post">
+                        <button type="submit" th:if="${not #lists.contains(trip.people,user) and  __${not trip.byInvitation}__  and  __${ not trip.premoderated}__}"
+                                class="btn btn-block btn-success small">Apply
+                        </button>
+                    </form>
+                    <p th:if="${trip.premoderated and not trip.organizator.equals(user) and not #lists.contains(trip.people,user)}">
+                        <small>This journey is pre-moderated, so author will have to accept your request first</small>
+                    </p>
+                    <hr/>
+
+                    <form th:if="${trip.organizator.equals(user) and trip.active == true}"
+                          th:action="@{'/closeJourney/'+ ${trip.id}}" th:method="put">
+                        <button type="submit" class="btn btn-block btn-danger small"
+                                th:if="${trip.organizator.equals(user) and trip.active == true}">Close journey
+                        </button>
+                    </form>
+                    <p th:if="${!trip.active}">The journey is closed. You can't sign or edit it</p>
+
+<hr>
+                    <form th:if="${trip.organizator.equals(user) and trip.active == false}" method="post" enctype="multipart/form-data" th:action="@{'/repeat/trip/'+${trip.id}}">
+                        <button  type="submit" class="btn btn-success pl-1 pr-1 btn-block"  ><i class="fa fa-edit"></i>Repeat activity</button>
+                    </form>
+                    <form th:if="${trip.organizator.equals(user) and trip.active == true}" method="post" enctype="multipart/form-data" th:action="@{'/edit/trip/'+${trip.id}}">
+                        <button  type="submit" class="btn btn-success pl-1 pr-1 btn-block"  ><i class="fa fa-edit"></i>Edit activity</button>
+                    </form>
+
+                    <div class="reviews">
+                        <a th:each="review : ${connectedReviews}" th:href="@{'/single/review/'+${review.id}}" th:text="'Review by: ' + ${review.author.username}"> </a>
+
+                    </div>
+
+                </div>
+        </ul>
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+
+                <div class="ml-md-3 ml-sm-auto">
+                    <ul class="nav navbar-nav ml-auto ">
+                        <li class="breadcrumb-item"><a class="black text-decoration-none" href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a class="black text-decoration-none" href="/journey">Journey</a>
+                        </li>
+                        <li class="breadcrumb-item"><a class="black text-decoration-none" th:text="${trip.title}"
+                                                       th:href="@{'/trip/'+${trip.getId()}}">Journey</a></li>
+
+                    </ul>
+
+                </div>
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                <a class="nav-link  " href="#">Top</a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img"
+                                                                                 th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}"                                                                                 th:alt="${#httpServletRequest.remoteUser}"
+                                                                                 style="height:19.2px;width: 16px"
+                                                                                 title="Profile page"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span
+                                    class=" nav-item glyphicon glyphicon-home  black"
+                                    title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span
+                                    class=" nav-item glyphicon glyphicon-off black" title="sing out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="row">
+
+            <div class="col-md-8">
+                <div class="head">
+                    <h4>General information</h4>
+                </div>
+                <div>
+                    <div class="mb-2 col-md-6 ">
+                        <table class="table table-sm">
+
+                            <tr>
+                                <td>
+                                    Title:
+                                </td>
+
+                                <td>
+                                    <p class="text" th:text="${trip.title}" type="text" readonly></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Creator:
+                                </td>
+
+                                <td>
+                                    <p class="text" th:text="${trip.organizator.username}" type="text" readonly></p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    Start date:
+                                </td>
+
+                                <td>
+                                    <input th:field="${trip.start_date}" type="date" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    End date:
+                                </td>
+
+                                <td>
+                                    <input th:field="${trip.end_date}" type="date" readonly>
+                                </td>
+                            </tr>
+
+                            <tr  id="counter" th:if="${trip.peopleNumber>0}">
+                                <td>
+                                   Available places:
+                                </td>
+
+                                <td>
+                                    [[${trip.peopleNumber}-${trip.people.size()}]] left
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>   <div class="mb-2 d-flex flex-wrap">
+                                    <div th:each="tag, rowIndex :${trip.tags}" class="tags">
+                                        <a th:href="@{'/search/tag/{name}'(name=${tag.tag})}" th:text="'#'+${trip.tags[ __${rowIndex.index}__].tag}+','"></a>&nbsp;
+                                    </div>
+                                    <div th:each="category, row:${trip.categories}" class="tags">
+                                        <a th:href="@{'/search/category/{name}'(name=${category.toString()})}" th:text="'#'+${trip.categories[ __${row.index}__]}+'.'"></a>&nbsp;
+                                    </div>
+
+                                </div></td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="head">
+                        <h4>Description</h4>
+                    </div>
+                    <div class="mb-2">
+                        <div class="col-md-12 mb-1"><p th:text="${trip.description}"></p></div>
+                        <div class="col-md-12 mb-1">
+                            <a th:text="${(trip.filename !=null) ? trip.filename: 'Included file'}" th:if="${trip.file != null}" th:href="@{'/file/'+${trip.id}}"><i class="fa fa-file-alt"></i> Included file</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="head">
+                    <h4>Participants</h4>
+                </div>
+
+                <div class="mb-2 ">
+                    <table>
+                        <tr th:if="${(!#lists.contains(trip.people,user) and !#lists.contains(trip.suggestedPeople,user)) and __${trip.byInvitation}__}">
+                            <div class="mt-4  text-center">
+                                <img alt="bonfire" src="/images/logo.png">
+                                <p>You can't see other people unless you're participant</p>
+                            </div>
+
+                        </tr>
+                    </table>
+
+                    <div class="table-responsive">
+                        <table th:if="${#lists.contains(trip.people,user)}" class="table table-sm table-responsive">
+                            <thead class="thead-light">
+                            <th scope="col">#</th>
+                            <th scope="col">Participant</th>
+                            <th scope="col">Contact mail:</th>
+                            <th scope="col"></th>
+
+                            </thead>
+                            <tr th:if="${#lists.contains(trip.people,user) or #lists.contains(trip.suggestedPeople,user)}"
+                                th:each="participant, rowIndex :${trip.people}">
+                                <td><p th:text="'#'+${rowIndex.index+1}"></p></td>
+                                <td><p type="text" th:text="${trip.people[__${rowIndex.index}__].username}"
+                                       readonly></p></td>
+                                <td><label><p type="text" th:text="${trip.people[__${rowIndex.index}__].mail}"
+                                              readonly></p></label>
+                                <td><a th:href="@{'/profileUser/'+${trip.people[__${rowIndex.index}__].username}}"><span
+                                        class="glyphicon glyphicon-eye-open"></span> </a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div class="head">
+                    <h4>Destination(s)</h4>
+                </div>
+                <div class="mb-2  col-md-6 col-xs-12">
+                    <table>
+                        <tr th:if="${!#lists.contains(trip.people,user) and !#lists.contains(trip.suggestedPeople,user) and __${trip.byInvitation}__ }">
+                            <div class="mt-4  text-center">
+                                <img alt="bonfire" src="/images/logo.png">
+                                <p>You can't see destinations unless you're participant</p>
+                            </div>
+
+                        </tr>
+                    </table>
+                    <table th:if="${#lists.contains(trip.people,user) or #lists.contains(trip.suggestedPeople,user) or __${not trip.byInvitation}__ }" class="table table-sm">
+                        <tr>
+                            <td><label>Start position:</label></td>
+                            <td class="flex d-inline-flex">
+                                <p type="text" th:object="${trip}" th:text="${trip.start_position.name}"readonly></p> &nbsp; &nbsp; <a th:if="!${trip.start_position.createdByUser}" th:href="@{'/browseLocation/'+${trip.start_position.id}}"><span
+                                        class="glyphicon glyphicon-eye-open"></span> </a>
+                            </td>
+                        </tr>
+
+                        <thead class="thead-light">
+                        <th scope="col">#</th>
+                        <th scope="col">Destination</th>
+                        </thead>
+                        <tr th:each="destination, rowIndex :${trip.route} ">
+                            <th><p th:text="${rowIndex.index+1}"></p></th>
+                            <td class="flex d-inline-flex" ><p type="text" th:text="${trip.route[__${rowIndex.index}__].name}" readonly></p>
+                                &nbsp; &nbsp; <a th:if="!${trip.route[__${rowIndex.index}__].createdByUser}" th:href="@{'/browseLocation/'+${trip.route[__${rowIndex.index}__].id}}"><span
+                                        class="glyphicon glyphicon-eye-open"></span> </a>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+
+
+            </div>
+            <div class="col-md-4">
+                <div class="head">Additional notes</div>
+                <div th:if="${!#lists.contains(trip.people, user)}">
+                    <div class="mt-4  text-center">
+                        <img alt="bonfire" src="/images/logo.png">
+                        <p>You can't see  unless you're participant</p>
+                    </div>
+
+                </div>
+                <div class="row mb-2" th:if="${#lists.contains(trip.people, user)}" th:each="comment,rowIndex : ${comments}">
+                    <div class="col-sm-1">
+                        <div class="thumbnail">
+                            <img style="max-width: 30px; max-height: 30px;" class="img-responsive user-photo"
+                                 th:src="@{__${(comments[rowIndex.index].author.thumbnail != null) ? '/profileImage/'+comments[rowIndex.index].author.id : '/images/nopic.png' }__}">
+                        </div><!-- /thumbnail -->
+                    </div>
+                    <div class="col-sm-11">
+                        <div class="panel panel-default">
+                            <div class="panel-heading ">
+                                <strong th:text="${comments[__${rowIndex.index}__].author.username}">myusername</strong>
+                                <span th:text="${#dates.format(comments[__${rowIndex.index}__].create_date,'dd/MM/yyyy HH:mm')}"
+                                      class="text-muted">commented 5 days ago</span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="md-form  amber-textarea active-amber-textarea">
+                                    <div class="">
+                                        <textarea class="md-textarea float-left form-control" rows="3" readonly
+                                                  th:text="${comments[__${rowIndex.index}__].text}">
+                                        </textarea>
+                                        <a th:text="${comments[__${rowIndex.index}__].filename}" th:if="${ comments[__${rowIndex.index}__].image != null}" th:href="@{'/openFull/'+${comments[__${rowIndex.index}__].id}}">
+                                            </a>
+                                        <form class=" float-right -pull-right"
+                                              th:if="${comments[__${rowIndex.index}__].author.username}==${#httpServletRequest.remoteUser}"
+                                              th:action="@{'/removeComment/'+${comments[__${rowIndex.index}__].id}}"
+                                              th:object="${comments[__${rowIndex.index}__]}"
+                                              th:method="delete"
+                                              >
+                                            <!--<input type="hidden" name="_method" value="delete" />-->
+
+                                            <button class="btn float-right -pull-right" type="submit" name="removeComment"
+                                                    th:value="${trip.id}"
+                                            ><span
+                                                    class="glyphicon glyphicon-remove"></span></button>
+                                        </form>
+
+                                    </div>
+
+                                </div>
+                            </div><!-- /panel-body -->
+                        </div><!-- /panel panel-default -->
+                    </div><!-- /col-sm-5 -->
+
+                </div>
+                <div class="line" th:if="${not #lists.isEmpty(comments)}"></div>
+
+                <div class="row" th:if="${#lists.contains(trip.people,user)}">
+                    <div class="col-sm-1">
+                        <div class="thumbnail">
+                            <img style="max-width: 30px; max-height: 30px;" class="img-responsive user-photo"
+                                 th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}">
+                        </div><!-- /thumbnail -->
+                    </div>
+                    <div class="col-sm-11">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong th:text="${user.username}">myusername</strong> <span class="text-muted"></span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="md-form  amber-textarea active-amber-textarea">
+                                    <form class="form " th:object="${review}" th:action="@{'/addComment/'}"
+                                          enctype="multipart/form-data" method="post">
+                                        <textarea id="form22" th:field="*{text}" class="md-textarea form-control"
+                                                  rows="3"></textarea>
+
+                                        <label for="file"><figure><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path></svg> Include file</figure> <span></span></label><input style="display:none;" id="file"  type="file" name="file" accept="image/*">
+                                        <button class="btn float-right -pull-right" th:value="${trip.id}" type="submit" name="addComment">Send
+                                        </button>
+                                    </form>
+                                </div>
+                            </div><!-- /panel-body -->
+                        </div><!-- /panel panel-default -->
+                    </div><!-- /col-sm-5 -->
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="head"><h4>Route on Map</h4>                 <input type="submit" id="route" value="Get route"   class="btn btn-info" data-toggle="collapse" data-target="#tutorial">
+                </div>
+
+                <div th:if="${!#lists.contains(trip.people,user) and __${trip.byInvitation}__ }">
+                    <div class="mt-4  text-center">
+                        <img alt="bonfire" src="/images/logo.png">
+                        <p>You can't see  unless you're participant</p>
+                    </div>
+
+                </div>
+                <div id="directions-panel"></div>
+                <div th:if="${#lists.contains(trip.people,user) or #lists.contains(trip.suggestedPeople,user) or __${not trip.byInvitation}__}" id="tutorial" class="collapse">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div  th:if="${#lists.contains(trip.people,user) or #lists.contains(trip.suggestedPeople,user) or __${not trip.byInvitation}__}" class="col-md-12">
+                <div id="floating-panel">
+                    <b>Mode of Travel: </b>
+                    <select id="mode">
+                        <option value="DRIVING">Driving</option>
+                        <option value="WALKING">Walking</option>
+                        <option value="BICYCLING">Bicycling</option>
+                        <option value="TRANSIT">Transit</option>
+                    </select>
+                </div>
+                <div id="map" style="width: 100%; height: 400px"></div>
+
+                <script th:if="${#lists.contains(trip.people,user) or#lists.contains(trip.suggestedPeople,user) or __${not trip.byInvitation}__}" th:inline="javascript">
+                    /*<![CDATA[*/
+                    function initMap() {
+                        var directionsService = new google.maps.DirectionsService;
+                        var directionsRenderer = new google.maps.DirectionsRenderer;
+                        var geocoder = new google.maps.Geocoder;
+                        var infowindow = new google.maps.InfoWindow;
+                        var map = new google.maps.Map(document.getElementById('map'), {
+                            zoom: 8,
+                            center: {lat:/*[[${trip.start_position.latlngX}]]*/ 0, lng:/*[[${trip.start_position.latlngY}]]*/ 0}
+                        });
+
+
+                            calculateAndDisplayRoute(directionsService, directionsRenderer);
+
+
+                        document.getElementById('mode').addEventListener('change', function() {
+                            calculateAndDisplayRoute(directionsService, directionsRenderer);
+                            directionsRenderer.setPanel(document.getElementById('tutorial'));
+
+                        });
+                        directionsRenderer.setPanel(document.getElementById('tutorial'));
+
+                        directionsRenderer.setMap(map);
+
+                        ;}
+                    function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+                        var selectedMode = document.getElementById('mode').value;
+                        var  destinations =/*[[${trip.route}]]*/  [];
+                        var waypts = [];
+
+                        /*[# th:each="destination : ${trip.route}"]*/
+                        waypts.push({
+                            location: new google.maps.LatLng(/*[[${destination.latlngX}]]*/ 54.7219118,/*[[${destination.latlngY}]]*/25.336616247800787),
+                            stopover: true
+                        });
+
+                        /*[/]*/
+
+                        var length = /*[[__${trip.route.size()}__]]*/ 0;
+
+                        var end ="";
+
+                        if(waypts[waypts.length-1] ==null){
+
+
+                            directionsService.route({
+                                origin: {lat:/*[[${trip.start_position.latlngX}]]*/ 0, lng:/*[[${trip.start_position.latlngY}]]*/ 0},
+                                destination: {lat:/*[[${trip.start_position.latlngX}]]*/ 0, lng:/*[[${trip.start_position.latlngY}]]*/ 0},
+                                optimizeWaypoints: true,
+                                travelMode: google.maps.TravelMode[selectedMode]
+                            }, function(response, status) {
+                                if (status === 'OK') {
+                                    directionsRenderer.setDirections(response);
+                                    var route = response.routes[0];
+
+                                } else {
+                                    window.alert('Directions request failed due to ' + status);
+                                }
+                            });}else{
+                            var endpoint = waypts[waypts.length-1].location;
+                            directionsService.route({
+                                origin: {lat:/*[[${trip.start_position.latlngX}]]*/ 0, lng:/*[[${trip.start_position.latlngY}]]*/ 0},
+                                destination: endpoint,
+                                waypoints:waypts,
+                                optimizeWaypoints: true,
+                                travelMode: google.maps.TravelMode[selectedMode]
+                            }, function(response, status) {
+                                if (status === 'OK') {
+                                    directionsRenderer.setDirections(response);
+                                    var route = response.routes[0];
+
+                                } else {
+                                    window.alert('No suggested routes using this travel mode');
+                                }
+                            });
+
+
+
+                        }
+                    }
+
+                    /*]]>*/
+                </script>
+                <script th:if="${#lists.contains(trip.people,user) or #lists.contains(trip.suggestedPeople,user) or __${not trip.byInvitation}__}" th:inline="javascript" async="async" defer="defer" src="https://maps.googleapis.com/maps/api/js?key=#"
+                ></script>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+    var counter= /*[[${trip.peopleNumber}-${trip.people.size()}]]*/ 0;
+
+
+    if (0 <= counter && counter < 3){
+        document.getElementById("counter").style.backgroundColor="rgba(255, 25, 50, 0.5)";
+    }
+
+    if (counter < 10 && 3 < counter){
+        document.getElementById("counter").style.backgroundColor="rgba(234, 255, 75, 0.5)";
+    }
+    /*]]>*/
+
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
+
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>

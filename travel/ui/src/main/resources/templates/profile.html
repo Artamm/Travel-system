@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Collapsible sidebar using Bootstrap 4</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+    <script th:src="@{/js/profile.js}"></script>
+
+
+
+</head>
+
+<body>
+
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <!-- Sidebar  -->
+    <nav id="sidebar">
+
+        <ul class="list-unstyled components">
+
+            <div id="photoChange1" class="mt-2 justify-content-center align-content-center align-self-center border-bottom">
+                <div class=" mt-2 text-center justify-content-center align-content-center align-self-center">
+                    <img class="card-img rounded-circle " th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" style="max-width: 150px; max-height: 150px" th:alt="${#httpServletRequest.remoteUser}"  title="Profile page">
+                    <h6 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h6>
+                    <div class="statistics CTAs ">
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys created:</p>
+                            <p th:object="${organizator}" th:text="${organizator.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys participated:</p>
+                            <p th:object="${personPastJourney}" th:text="${personPastJourney.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info " style="display: flex"><p class="stat-info">Upcoming:</p>
+                            <p th:object="${personActiveJourney}" th:text="${personActiveJourney.size()}" class="stat-info">0</p></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <li class="active ">
+                <a href="/profile" class=" text-decoration-none">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+
+            </li>
+            <li>
+                <a href="/journey" class="text-decoration-none">
+                    <i class="fas fa-road"></i>
+                    Journeys
+                    <span class="badge badge-info" th:if="${requestNumber}>0" th:text="${requestNumber}"></span>
+                </a>
+                <a  href="/reviews" class="flex-wrap" >
+                    <i class="fas fa-readme"></i>
+                    Reviews
+                </a>
+
+                <a href="/locations" class="flex-wrap" >
+                    <i class="fas fa-address-book"></i>
+                    Locations
+                </a>
+
+            </li>
+            <li>
+                <a href="/find" class="flex-wrap" >
+                    <i class="fas fa-search"></i>
+                    Advanced Search
+                </a>
+
+            </li>
+            <li>
+                <a href="/allUsers" class="text-decoration-none ">
+                    <i class="fas fa-people-carry"></i>
+                    Other users
+                </a>
+            </li>
+            <li>
+                <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-link">
+                    <i class="fas fa-ring"></i>
+                    One page to rule them all
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+
+                <div class="ml-md-3 ml-sm-auto">
+                    <ul class="nav navbar-nav ">
+                        <li class="breadcrumb-item"><a class="black text-decoration-none" href="/"></a></li>
+                        <li class="breadcrumb-item"><a class="black text-decoration-none" href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a class="black text-decoration-none" href="/allUsers">Users</a></li>
+                    </ul>
+
+                </div>
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                <a  class="nav-link" href="#">Top</a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img" th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" th:alt="${#httpServletRequest.remoteUser}" style="height:19.2px;width: 16px" title="Profile page"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span class=" nav-item glyphicon glyphicon-home  black" title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" href="/help" target="_blank"><span class=" nav-item glyphicon glyphicon-question-sign black" title="Help"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off black" title="sing out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="row">
+
+            <div class="col-md-9  col-xs-12">
+                <div class="head">
+                    <h4>Personal information</h4>
+                </div>
+                <div th:object="${user}">
+                    <form method="post" th:action="@{/changeName}" th:object="${nameChange}"  class="mb-2 col-md-6">
+                        <table class="table table-sm">
+                            <tbody>
+                            <tr>
+                                <td><label for="1" class="label">Username:</label></td>
+                                <td><input class="disabled"  style="background: #e9ecef" id="1" type="text" readonly th:field="${user.username}"> *Seen for
+                                    every user
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label for="2" class="label secondary-label">Name: </label>
+                                </td>
+                                <td>
+                                    <input class=" disabled" id="2" type="text" th:value="${user.name}" th:field="*{name}">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <label class="label">Surname:</label>
+                                </td>
+                                <td>
+                                    <input type="text" th:field="*{surname}" th:value="${user.surname}">
+                                </td>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    <button type="submit" class="btn btn-outline-info">Save changes</button>
+                                </td>
+                            </tr>
+                            <p class="secondary-text"> To correct mistakes in username - contact administrator.</p>
+                            </tbody>
+                        </table>
+
+                    </form>
+                    <div class="head">
+                        <h4>Contact information:</h4>
+                    </div>
+                    <form class="mb-2" th:action="@{/changeContacts}" method="post">
+
+                        <table class="table table-sm">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <label>E. mail:</label>
+                                </td>
+                                <td>
+                                    <input type="email" th:field="*{mail}"/> *Can  be seen by every user
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label>Phone:</label>
+                                </td>
+                                <td>
+                                    <input type="tel" th:field="*{phone}"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <button class="btn btn-outline-info" type="submit">Save contacts</button>
+
+                    </form>
+                </div>
+
+                <div class="head">
+                    <h4>Password</h4>
+                </div>
+                <form class="mb-2" th:action="@{/changePassword}" method="post" th:object="${passwordChange}">
+                    <div>
+                        <div class="col-md-12 mb-1"><input type="password" id="pas1" oninput="checkPassword();" placeholder="New password">
+                        </div>
+                        <div class="col-md-12 mb-2"><input type="password" id="pas2" th:object="${passwordChange}" th:field="*{password}"
+                                                           oninput="checkPassword();" placeholder="Repeat password"></div>
+                    </div>
+                    <div class="col-md-12 mb-2"><p id="inform" style="display:none">Passwords do not match.Please try again.</p></div>
+                    <div class="col-md-12 mb-2"><button id="changePas" class="btn btn-outline-info" type="submit" disabled>Save password</button></div>
+                </form>
+
+                <div class="head">
+                    <h4>Preferences</h4>
+                </div>
+                <form method="post" th:action="@{/changePreferences}" th:object="${preferences}" class="mb-2">
+                    <div class="col-md-12 mb-1"><input id="notification" name="notify"  th:checked="${user.sendNotifications}" th:value="${user.sendNotifications}" th:field="*{sendNotifications}" type="checkbox"> <label for="notification">Get information on
+                    e.mail address</label></div>
+                    <div class="col-md-12 mb-1"><input id="real-name" name="hide" th:checked="${user.hideContacts}" th:value="${user.hideContacts}" th:field="*{hideContacts}" type="checkbox"> <label for="real-name">Hide my real name from
+                        users</label></div>
+<button class="btn btn-outline-primary" type="submit">Save changes</button>
+
+                </form>
+
+            </div>
+
+            <div class="col-md-3">
+                <div class="head">
+                    <h4>Profile photo:</h4>
+                </div>
+                <div id="photoChange" class="mt-2">
+                    <div class=" text-center image-upload p-2">
+                        <form id="formPhoto" enctype="multipart/form-data" method="POST" th:action="@{/updateImage}"
+                              th:object="${userProfile}">
+                            <label for="file-input"><img class="card-img rounded-circle file-upload-image" id="blah"
+                                                         th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}"
+                                                         style="max-width: 150px; max-height: 150px"
+                                                         th:alt="${#httpServletRequest.remoteUser}" title="That's you">
+                                <figure>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17">
+                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"></path>
+                                    </svg>
+                                    Upload file
+                                </figure>
+                                <span></span>
+                            </label>
+                            <input style="display: none" id="file-input" accept="image/*" name="file" onchange="readURL(this)"
+                                   type="file" required/>
+                            <div><input class="btn btn-info btn-block small CTAs" type="submit"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
+</body>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>

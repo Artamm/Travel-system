@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <h4>Hello,</h4>
+
+    Please, change this password after you sign in the system again.
+    <hr>
+    <table class="table table-hover">
+
+        <tbody>
+        <tr>
+            <td>Username:</td>
+            <td><span th:text="${username}"></span></td>
+        </tr>
+        <tr>
+            <td>Temporary password:</td>
+            <td><span th:text="${password}"></span></td>
+        </tr>
+
+
+        <tr>
+            <td>Change date:</td>
+            <td><span th:text="${registered}"></span></td>
+        </tr>
+
+        </tbody>
+    </table>
+    <hr>
+
+    <h4>Cheers!</h4>
+
+</div>
+
+</body>
+</div>
+
+
+
+</html>

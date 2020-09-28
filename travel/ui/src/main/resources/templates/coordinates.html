@@ -1,0 +1,128 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Quick coordinate specifiaction</title>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.14/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.14/"></script>
+
+
+
+
+    <script th:inline="javascript">
+
+
+        require([
+            "esri/Map",
+            "esri/views/MapView"
+        ], function (Map, MapView) {
+
+            var map = new Map({
+                basemap: "topo-vector"
+            });
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [21.1350469, 55.7127529],
+                zoom: 7
+            });
+
+            //*** Add div element to show coordates ***//
+            // var coordsWidget = document.createElement("div");
+            // coordsWidget.id = "coordsWidget";
+            // coordsWidget.className = "esri-widget esri-component";
+            // coordsWidget.style.padding = "7px 15px 5px";
+            // view.ui.add(coordsWidget, "bottom-right");
+
+            //*** Update lat, lon, zoom and scale ***//
+            function showCoordinates(pt) {
+                // var coords = "Lat/Lon " + pt.latitude.toFixed(3) + " " + pt.longitude.toFixed(3) +
+                //     " | Scale 1:" + Math.round(view.scale * 1) / 1 +
+                //     " | Zoom " + view.zoom;
+                // coordsWidget.innerHTML = coords;
+
+                document.getElementById("latitude").innerHTML = 'Latitude:  '+pt.latitude.toFixed(3);
+                document.getElementById("longitude").innerHTML ='Longtitude:'+pt.longitude.toFixed(3);
+                document.getElementById("scale").innerHTML = "Scale: 1:"+Math.round(view.scale * 1) / 1;
+
+
+
+
+
+            }
+
+            //*** Add event and show center coordinates after the view is finished moving e.g. zoom, pan ***//
+            view.watch(["stationary"], function () {
+                showCoordinates(view.center);
+            });
+
+            //*** Add event to show mouse coordinates on click and move ***//
+            // view.on(["pointer-down","pointer-move"], function(evt) {
+            //     showCoordinates(view.toMap({ x: evt.x, y: evt.y }));
+            // });
+
+            view.on(["click"], function (evt) {
+                showCoordinates(view.toMap({x: evt.x, y: evt.y}));
+            })
+
+
+        });
+
+
+
+
+    </script>
+
+
+</head>
+<body>
+<div class="wrapper">
+
+    <div id="content">
+
+
+        <nav style="position: fixed; right: 10px; top:20px; z-index: 99; opacity: 0.8;border: solid black" class="esri-widget esri-component ">
+            <div id="container" class="container-fluid" style="background-color: white;padding: 10px 15px;border: black">
+<div class="col"><h4>Coordinates</h4></div>
+                <div class="col " style="margin-bottom: 5px;">
+                    <p id="latitude" type="text"></p>
+                </div>
+                <div class="col">
+                    <p id="longitude" type="text"></p>
+                </div>
+                <div class="col">
+                    <p id="scale" type="text"></p>
+                </div>
+
+
+            </div>
+
+
+        </nav>
+
+        <div style="cursor: pointer" id="viewDiv"></div>
+
+    </div>
+</div>
+</body>
+
+</html>

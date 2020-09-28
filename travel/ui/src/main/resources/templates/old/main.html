@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Main page</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/dist/umd/popper.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+
+
+</head>
+<body class="container-fluid" >
+
+
+<div class="row header navbar">
+    <div class="col-md-2 col-sm-4">
+        <div>
+        <img class="nav-item img-fluid" alt="logo" src="/images/logo.png" style="height: 40px;">
+        TiS</div>
+    </div>
+    <div class="offset-md-8 offset-sm-0 col-md-2 col-sm-8  text-right align-content-end">
+       <img class="figure-img" th:src="@{'/profileImage/' }" th:alt="${#httpServletRequest.remoteUser}" style="height:19.2px;width: 16px" title="That's you">
+        <a th:href="@{/index4}"><span class=" nav-item glyphicon glyphicon-home headerpanel" title="return to the start menu"></span></a>
+        <span class=" nav-item glyphicon glyphicon-question-sign headerpanel" title="information for users"></span>
+        <a th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off headerpanel" title="sing out"></span></a>
+    </div>
+</div>
+
+<div class="row main-body">
+
+    <aside class="col-xs-12 col-md-2 menu-bar  justify-content-center" >
+        <div id="photoChange" class="mt-2 justify-content-center align-content-center align-self-center border-bottom">
+            <div class=" mt-2 text-center justify-content-center align-content-center align-self-center">
+               <img class="card-img rounded-circle " th:src="@{'/profileImage/' }" style="max-width: 150px; max-height: 150px" th:alt="${#httpServletRequest.remoteUser}"  title="That's you">
+                <h6 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h6>
+                <div class="statistics">
+                    <div class="stat-info" style="display: flex"><p class="stat-info">Journeys created:</p>
+                        <p th:object="${organizator}" th:text="${organizator.size()}" class="stat-info">0</p></div>
+                    <div class="stat-info" style="display: flex"><p class="stat-info">Journeys participated:</p>
+                        <p th:object="${personPastJourney}" th:text="${personPastJourney.size()}" class="stat-info">0</p></div>
+                    <div class="stat-info " style="display: flex"><p class="stat-info">Upcoming:</p>
+                        <p th:object="${personActiveJourney}" th:text="${personActiveJourney.size()}" class="stat-info">0</p></div>
+                </div>
+            </div>
+
+
+        </div>
+      <a href="/profile" class="menu-link"><div class=" block menu-segment"><span class="glyphicon glyphicon-user"> </span> Profile</div></a>
+        <a href="/journey" class="menu-link"> <div class="block menu-segment"><span class="glyphicon glyphicon-road"> </span> Journeys <span class="badge badge-info" th:if="${requestNumber}>0" th:text="${requestNumber}"></span></div></a>
+        <div class="block menu-segment"> <span class="glyphicon glyphicon-edit"> </span> Reviews</div>
+       <div class="block menu-segment"><span class="glyphicon glyphicon-search"> </span> Advanced Search</div>
+        <div class="block menu-segment"><span class="glyphicon glyphicon-pencil"> </span> Other users</div>
+        <div sec:authorize="hasAuthority('ADMIN')" class="block menu-segment"><span class="glyphicon glyphicon-refresh"> </span>One ring to rule them all </div>
+
+
+    </aside>
+
+    <div class="col-xs-12 col-md-5 col-lg-5">
+        <div class="titlebar">
+            Upcoming activities
+        </div>
+        <div class="upcoming">
+            <table class="table  table-hover table-bordered">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Event</th>
+                    <th scope="col">Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="journey,row :${personJourney}">
+                    <td><p th:text="${row.index+1}"></p></td>
+                    <td><p th:text="${journey.start_date}"></p></td>
+                    <td> <a th:href="@{/trip/__${journey.id}__}" th:text="${journey.title}"></a></td>
+                    <td><p th:text="${journey.start_position.coordinates}"></p></td>
+
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-5 col-lg-5 mt-2">
+        <div class="addparty justify-content-around" style="display: flex">
+            <div style="display: inline-block">Want to create a journey?
+            <ul class="" >
+               <a href="/create_journey"> <li class="">Create a new journey</li></a>
+                <a href="#"><li class="">Repeat already created activity</li></a>
+                <a href="#"><li class="">Create journey  by invitations</li></a>
+            </ul>
+            </div>
+            <img class="party-images" src="/images/add.png" >
+        </div>
+        <div class="joinparty justify-content-around" style="display: flex">
+            <div style="display: inline-block">Want to join the party?
+                <ul class="" >
+                    <a href="/create_journey"> <li class="">Explore journey's</li></a>
+                    <a href="#"><li class="">Manage personal activities</li></a>
+                </ul>
+            </div>
+
+
+            <img  class="party-images" src="/images/join.png" >
+
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>

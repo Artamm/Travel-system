@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+
+</head>
+<body>
+
+<div class="container-fluid">
+    <h4>Hello,</h4>
+
+    You've been invited in journey. For more details visit your "Journeys" page in the travelsystem247.
+
+    <table class="table table-hover">
+
+        <tbody>
+        <tr>
+            <td>Journey:</td>
+            <td><span th:text="${journey}"></span></td>
+        </tr>
+        <tr>
+            <td>Created by:</td>
+            <td><span th:text="${author}"></span></td>
+        </tr>
+        <tr>
+            <td>Start date:</td>
+            <td><span th:text="${date}"></span></td>
+        </tr>
+
+        <tr>
+            <td>Start position:</td>
+            <td><span th:text="${start}"></span></td>
+        </tr>
+        </tbody>
+    </table>
+<hr>
+
+    <h5>Cheers!</h5>
+
+</div>
+
+</body>
+</div>
+
+
+
+</html>

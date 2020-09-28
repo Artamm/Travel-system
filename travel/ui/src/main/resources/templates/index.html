@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Main page</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+    <link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+
+            <ul class="list-unstyled components">
+
+                <div id="photoChange" class="mt-2 justify-content-center align-content-center align-self-center border-bottom">
+                    <div class=" mt-2 text-center justify-content-center align-content-center align-self-center">
+                        <img class="card-img rounded-circle " th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" style="max-width: 150px; max-height: 150px" th:alt="${#httpServletRequest.remoteUser}"  title="Profile page">
+                        <h6 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h6>
+                        <div class="statistics CTAs ">
+                            <div class="stat-info" style="display: flex"><p class="stat-info">Journeys created:</p>
+                                <p th:object="${organizator}" th:text="${organizator.size()}" class="stat-info">0</p></div>
+                            <div class="stat-info" style="display: flex"><p class="stat-info">Journeys participated:</p>
+                                <p th:object="${personPastJourney}" th:text="${personPastJourney.size()}" class="stat-info">0</p></div>
+                            <div class="stat-info " style="display: flex"><p class="stat-info">Upcoming:</p>
+                                <p th:object="${personActiveJourney}" th:text="${personActiveJourney.size()}" class="stat-info">0</p></div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <li class="active ">
+                    <a href="/profile" class=" text-decoration-none">
+                        <i class="fas fa-user"></i>
+                        Profile
+                    </a>
+
+                </li>
+                <li>
+                    <a href="/journey" class="text-decoration-none">
+                        <i class="fas fa-road"></i>
+                        Journeys
+                        <span class="badge badge-info" th:if="${requestNumber}>0" th:text="${requestNumber}"></span>
+                    </a>
+                    <a  href="/reviews" class="flex-wrap" >
+                        <i class="fas fa-readme"></i>
+                        Reviews
+                    </a>
+
+                    <a href="/locations" class="flex-wrap" >
+                        <i class="fas fa-address-book"></i>
+                         Locations
+                    </a>
+
+                </li>
+                <li>
+                    <a href="/find" class="flex-wrap" >
+                        <i class="fas fa-search"></i>
+                        Advanced Search
+                    </a>
+
+                </li>
+                <li>
+                    <a href="/allUsers" class="text-decoration-none ">
+                        <i class="fas fa-people-carry"></i>
+                        Other users
+                    </a>
+                </li>
+                <li>
+                    <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-link">
+                        <i class="fas fa-ring"></i>
+                        One page to rule them all
+                    </a>
+                </li>
+            </ul>
+
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                    <a class="nav-link  " href="#">Top</a>
+
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link black" th:href="@{/profile}"><img class="figure-img" th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" th:alt="${#httpServletRequest.remoteUser}" style="height:19.2px;width: 16px" title="Profile page"></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link black" th:href="@{/}"><span class=" nav-item glyphicon glyphicon-home  black" title="return to the start menu"></span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link black" href="/help" target="_blank"><span class=" nav-item glyphicon glyphicon-question-sign black" title="Help"></span></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link black" th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off black" title="sign out"></span></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="head">
+            Upcoming activities
+        </div>
+        <div class="upcoming table-responsive">
+            <div th:if="${#lists.isEmpty(upcoming)}" class="mt-4  text-center">
+                <img alt="bonfire" src="/images/logo.png">
+                <p>No upcoming activities  in 3 days</p>
+            </div>
+            <table th:if="${#lists.isEmpty(upcoming)==false}"  class="table table-sm table-hover table-bordered">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Event</th>
+                    <th scope="col">Start position</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="journey,row :${upcoming}">
+                    <td><p th:text="${row.index+1}"></p></td>
+                    <td><p th:text="${#dates.format(journey.start_date,'yyyy.MM.dd')}"></p></td>
+                    <td> <a th:href="@{/trip/__${journey.id}__}" th:text="${journey.title}"></a></td>
+                    <td><p th:text=" ${journey.start_position.name}+' ('+${journey.start_position.coordinates} +') '"></p></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+            <div class="row">
+                <div class="col-md-6">
+
+                    <div class="addparty justify-content-around" style="display: flex">
+                        <div style="display: inline-block">Want to create a journey?
+                            <ul class="" >
+                                <a href="/journey/new"> <li class="">Create a new journey</li></a>
+                                <a href="/locations"> <li class="">Discover locations</li></a>
+                                <a href="/coordinates"> <li class="">Check coordinates</li></a>
+                            </ul>
+                        </div>
+                        <img class="party-images" src="/images/add.png" >
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="joinparty justify-content-around" style="display: flex">
+                        <div style="display: inline-block">Want to join the party?
+                            <ul class="" >
+                                <a href="/find"> <li class="">Explore journey's</li></a>
+                                <a href="/allUsers"><li class="">Search by users</li></a>
+                            </ul>
+                        </div>
+
+
+                        <img  class="party-images" src="/images/join.png" >
+
+                    </div>
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="head">Latest added locations:</div>
+
+                    <div class="d-flex addr"></div>
+
+                </div>
+            </div>
+            <div th:unless="${ #lists.isEmpty(locationsNew)}" class="row">
+
+
+                <div class="col-md-12">
+                    <table class="table table-view table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Categories</th>
+                            <th scope="col">Added in the system</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+                        <tr th:each="location, rowIndex : ${locationsNew}">
+                            <td><p th:text="${rowIndex.index +1}"></p></td>
+                            <td><p th:text="${locationsNew[__${rowIndex.index}__].name}"></p></td>
+                            <td><a th:href="@{'/browseLocation/'+${locationsNew[__${rowIndex.index}__].id}}" th:text="${locationsNew[__${rowIndex.index}__].coordinates}"><span
+                                    class="glyphicon glyphicon-eye-open"></span> </a>
+                            </td>
+
+                            <td>
+                                <img style="height: 80px;width: 80px" th:src="@{__${(locationsNew[rowIndex.index].thumbnail != null) ? '/getDestinationImage/'+locationsNew[rowIndex.index].id : '/images/nopic.png' }__}">
+                            </td>
+                            <td>
+                                <div class="d-inline-flex" th:each="category,row : ${locationsNew[__${rowIndex.index}__].categories}">
+                                    <a th:href="@{'/search/category/'+${category.toString()}}" th:text="${locationsNew[__${rowIndex.index}__].categories[row.index].category}"></a>&nbsp
+                                </div>
+                            </td>
+                            <td><p th:text="${#dates.format(locationsNew[__${rowIndex.index}__].created,'yyyy.MM.dd')}"></p></td>
+
+
+
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            </div>
+
+            <div th:unless="${#lists.isEmpty(locationsNew)}" class="row">
+                <div class="col-md-12">
+
+                    <div id="map" style="width: 100%; height: 400px"></div>
+
+
+                    <script th:inline="javascript">
+                        /*<![CDATA[*/
+                        function initMap() {
+
+                            var myLatLng = {lat:/*[[${locationsNew[0].latlngX}]]*/0, lng: /*[[${locationsNew[0].latlngY}]]*/};
+
+                            var map = new google.maps.Map(document.getElementById('map'), {
+                                zoom: 4,
+                                center: myLatLng
+                            });
+
+                            /*[# th:each="destination : ${locationsNew}"]*/
+                            new google.maps.Marker({
+                                position: new google.maps.LatLng(/*[[${destination.latlngX}]]*/0, /*[[${destination.latlngY}]]*/ 0),
+                                map: map,
+                                title:/*[[${destination.name}]]*/ "",
+                                label:/*[[${destination.name}]]*/ ""
+                            });
+
+                            /*[/]*/
+                        }
+                        /*]]>*/
+                    </script>
+                    <script th:if="${not #lists.isEmpty(locationsNew)}" th:inline="javascript" async="async" defer="defer" src="https://maps.googleapis.com/maps/api/js?key=#"
+                    ></script>
+                    <!--<iframe src="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6" width="100%" height="500"></iframe>-->
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+   <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+</body>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>

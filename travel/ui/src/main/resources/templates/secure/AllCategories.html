@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>All reviews and tags</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+    <link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.js}"></script>
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <nav id="sidebar">
+
+        <ul class="list-unstyled components">
+
+            <div id="photoChange" class="mt-2 justify-content-center align-content-center align-self-center border-bottom">
+                <div class=" mt-2 text-center justify-content-center align-content-center align-self-center">
+                    <img class="card-img rounded-circle " th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}" style="max-width: 150px; max-height: 150px" th:alt="${#httpServletRequest.remoteUser}"  title="That's you">
+                    <h6 th:inline="text">[[${#httpServletRequest.remoteUser}]]</h6>
+                    <div class="statistics CTAs ">
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys created:</p>
+                            <p th:object="${organizator}" th:text="${organizator.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info" style="display: flex"><p class="stat-info">Journeys participated:</p>
+                            <p th:object="${personPastJourney}" th:text="${personPastJourney.size()}" class="stat-info">0</p></div>
+                        <div class="stat-info " style="display: flex"><p class="stat-info">Upcoming:</p>
+                            <p th:object="${personActiveJourney}" th:text="${personActiveJourney.size()}" class="stat-info">0</p></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <li class="active ">
+                <a href="/profile" class=" text-decoration-none">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+
+            </li>
+            <li>
+                <a href="/journey" class="text-decoration-none">
+                    <i class="fas fa-road"></i>
+                    Journeys
+                    <span class="badge badge-info" th:if="${requestNumber}>0" th:text="${requestNumber}"></span>
+                </a>
+                <a  href="/reviews" class="flex-wrap" >
+                    <i class="fas fa-readme"></i>
+                    Reviews
+                </a>
+
+                <a href="/locations" class="flex-wrap" >
+                    <i class="fas fa-address-book"></i>
+                    Locations
+                </a>
+
+            </li>
+            <li>
+                <a href="/find" class="flex-wrap" >
+                    <i class="fas fa-search"></i>
+                    Advanced Search
+                </a>
+
+            </li>
+            <li>
+                <a href="/allUsers" class="text-decoration-none ">
+                    <i class="fas fa-people-carry"></i>
+                    Other users
+                </a>
+            </li>
+            <li>
+                <a sec:authorize="hasAuthority('ADMIN')" th:href="@{/admin}" class="nav-link">
+                    <i class="fas fa-ring"></i>
+                    One page to rule them all
+                </a>
+            </li>
+        </ul>
+
+    </nav>
+
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+
+                <button type="button" id="sidebarCollapse" class="btn btn-info mr-2">
+                    <i class="fas fa-align-left"></i>
+                    <span></span>
+                </button>
+                <ul class="nav navbar-nav ">
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/"></a></li>
+
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" href="/admin">Admin page</a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" href="/reviews/tags/"> <b>Tags and reviews</b></a></li>
+                    <li class="breadcrumb-item"><a class="black text-decoration-none" th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" href="/find"> Search
+                    </a></li>
+
+
+
+                </ul>
+
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation" id="toggleButton">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                <a class="nav-link  " href="#">Top</a>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img"
+                                                                                 th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}"
+                                                                                 th:alt="${#httpServletRequest.remoteUser}"
+                                                                                 style="height:19.2px;width: 16px"
+                                                                                 title="That's you"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span
+                                    class=" nav-item glyphicon glyphicon-home  black"
+                                    title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" href="/help" target="_blank"><span class=" nav-item glyphicon glyphicon-question-sign black" title="Help"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span
+                                    class=" nav-item glyphicon glyphicon-off black" title="sign out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+
+        <div class="row mb-2 mt-2">
+
+            <div class="col-md-12">
+                <form method="get" th:object="${review}" th:action="@{'/admin/find/review/'}">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" th:field="*{text}" placeholder="Find review by tag" aria-label="Quick search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" name="free" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+
+            <div class="col-auto">
+                <table id="dtBasicExample1" class="table table-view table-hover">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tag</th>
+                        <th th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" sec:authorize="hasAuthority('ADMIN')" scope="col"> Tools</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+                    <div class="alert alert-success alert-dismissible" role="alert" th:if="${message}" th:text="${message}"></div>
+
+                    <div th:each="tag, rowIndex : ${tags}">
+                    <tr >
+                        <td><p th:text="${rowIndex.index +1}"></p></td>
+                        <td><a th:href="@{'/search/tag/{name}'(name=${tag.tag})}" th:text="${tag.tag}"></a></td>
+
+
+                        <td th:if="${#authorization.expression('hasAuthority(''ADMIN'')')}" sec:authorize="hasAuthority('ADMIN')">
+                            <div class="d-inline-flex flex-wrap p-2" id="tools">
+                                <form sec:authorize="hasAuthority('ADMIN')"  th:action="@{'/del/tag/'+${tag.id}}"  th:method="delete">
+                                    <button  type="submit" class="btn "><span
+                                            class="glyphicon glyphicon-minus-sign">Delete tag</span></button>
+                                </form>
+
+                                    <button  th:value="${tags[__${rowIndex.index}__].tag}"
+                                             class="btn " data-toggle="modal"
+                                             th:attr="data-target='#exampleModal'+ __${rowIndex.index}__"  ><span
+                                            class="glyphicon glyphicon-edit">Edit tag</span></button>
+
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                    </div>
+                    </tbody>
+
+                </table>
+
+            </div>
+            <div class="col-md-8">
+<div class="row">
+    <div class = "col-md-4" th:each="review,index :${reviews}">
+        <div class="card " >
+            <div class="row">
+                <div class="col-auto">
+                    <form th:action="@{'/delete/review/'+${review.id}}" th:method="delete">
+                        <button id="delete" class="btn" type="submit"><i class="fa fa-trash" title="delete"></i></button>
+                    </form>
+                </div>
+                <div class="col-auto">
+                    <button  th:value="${reviews[__${index.index}__].text}"
+                             class="btn " data-toggle="modal"
+                             th:attr="data-target='#exampleModalReview'+ __${index.index}__"  ><span
+                            class="glyphicon glyphicon-edit">Edit review</span></button>
+                </div></div>
+            <img class="card-img-top" style="max-height: 20rem;" th:src="@{__${(review.image != null) ? '/review/image/'+ review.id : '/images/nopic.png' }__}" alt="Card image cap">
+
+            <div class="card-body card">
+                <h5 class="card-title" th:text="${review.journey.title}">Card title</h5>
+                <p class="card-text" th:text="${review.text}"></p>
+
+            </div>
+            <div class="card-footer text-muted">
+                <p th:text="'Created: '+${#dates.format(review.create_date,'yyyy.MM.dd HH:mm')}"></p>
+                <a th:href="@{'/profileUser/{username}'(username=${review.author.username})}" class="card-text" th:text="'By '+ ${review.author.username}"></a>
+
+            </div>
+
+            <div class="card-footer text-muted">
+
+                <div th:each="note,index :${review.tag}">
+                    <a href="#" th:text="'#'+${note.tag}"></a>
+                    &nbsp;
+                </div>
+            </div>
+
+            <div class="card-footer text-muted">
+                <div class="row">
+
+                    <div class="col-auto">
+                        <a th:href="@{'/trip/'+ ${review.journey.id}}" class="btn btn-link"> Journey <i class="fa fa-external-link-alt" title="go to journey page"></i> </a>
+                        <a th:href="@{'/single/review/'+ ${review.id}}" class="btn btn-link"> Review <i class="fa fa-external-link-alt" title="go to journey page"></i> </a>
+
+                    </div>
+                    <div class="col-auto">
+                        <p th:text="${review.rate}+'/5'"></p>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+<div th:each="tag, index : ${tags}">
+    <form th:object="${tag}"   th:action="@{'/edit/tag/'+${tag.id}}" th:method="put">
+    <div class="modal fade" th:id="'exampleModal'+__${index.index}__" tabindex="-1" role="dialog"  aria-hidden="true">
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" th:text="'Edit tag id #'+${tags[__${index.index}__].id}">Tag edit </h5>
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row p-2 mb-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Tag</div>
+                            </div>
+                            <input type="text" class="form-control"
+                                   th:value="${tags[__${index.index}__].tag}"  id="tag" name="tag">
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" th:value="${tags[__${index.index}__].tag}" name="saveChange" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
+
+
+
+
+<div th:each="reviewEdit, index : ${reviews}">
+    <form th:object="${tag}"   th:action="@{'/edit/review/'+${reviewEdit.id}}" th:method="put">
+        <div class="modal fade" th:id="'exampleModalReview'+__${index.index}__" tabindex="-1" role="dialog"  aria-hidden="true">
+
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" th:text="'Edit review id #'+${reviews[__${index.index}__].id}">Tag edit </h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row p-2 mb-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Text</div>
+                                </div>
+                                <input type="text" class="form-control"
+                                          th:value="${reviews[__${index.index}__].text}"  id="review" name="review">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" th:value="${reviews[__${index.index}__].text}" name="saveChange" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+        $('#toggleButton').on('click', function () {
+            $('#navbarSupportedContent').collapse('show');
+        });
+
+        // $('#dtBasicExample').DataTable();
+        // $('.dataTables_length').addClass('bs-select');
+
+    });
+
+
+</script>
+
+
+</body>
+<!--<script type="text/javascript" th:src="@{webjars/mdbootstrap-bootstrap-material-design/js/mdb.min.js}"></script>-->
+<script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.js}"></script>
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</html>

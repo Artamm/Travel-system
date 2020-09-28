@@ -1,0 +1,430 @@
+
+body {
+    background:rgba(255,255,255,.2);!important;
+    /*font-family: 'Roboto';*/
+    font:600 16px/18px 'Open Sans',sans-serif;
+}
+
+html,body{
+    height: 100%;
+    scroll-behavior: smooth;
+}
+.header {
+    /*padding: 10px 20px;*/
+    background-color: #a879c1;
+}
+
+.upcoming {
+    /*background-color: #f9edc0*/
+}
+
+.main-body,.menu-bar {
+    height: 100%;
+}
+
+.menu-bar{
+    background-color: #e3a6fc;
+}
+
+.menu-segment {
+    padding: 5px 10px;
+    border-bottom: 1px solid rgba(155, 155, 155, 0.5);;
+
+}
+
+.titlebar {
+    padding: 8px 10px;
+}
+
+.statistics {
+    padding: 8px 10px;
+    margin-right: 10px;
+}
+
+.stat-info {
+    margin: 0;
+    padding: 0;
+color:white;!important;
+    font: 0.8rem Roboto white;
+}
+
+h5 {
+    padding: 5px;
+}
+
+
+.black  {
+    color: black;!important;
+}
+
+
+
+.menu-segment:hover {
+    background-color: #754e8d;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.menu-link {
+    color: #000000 !important;
+    text-decoration: none;
+}
+
+.party-images {
+    height: 160px;
+}
+.addparty,.joinparty{
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    border:1px solid rgba(155, 155, 155, 0.5); ;
+}
+.image-upload>input {
+    display: none;
+}
+label:hover{
+    cursor: pointer;
+}
+.head{
+    padding: 5px 10px;
+    margin-bottom:10px;
+    margin-top: 5px;
+
+}
+
+.searchbar{
+    margin-bottom: auto;
+    margin-top: auto;
+    height: 60px;
+    background-color: #a879c1;
+    border-radius: 30px;
+    padding: 10px;
+}
+
+.search_input{
+    color: white;
+    border: 0;
+    outline: 0;
+    background: none;
+    width: 0;
+    caret-color:transparent;
+    line-height: 40px;
+    transition: width 0.4s linear;
+}
+
+.searchbar:hover > .search_input{
+    padding: 0 10px;
+    width: 450px;
+    caret-color:#a879c1;
+    transition: width 0.4s linear;
+}
+
+.searchbar:hover > .search_icon{
+    background: white;
+    color: #a879c1;
+}
+
+.search_icon{
+    height: 40px;
+    width: 40px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color:white;
+    text-decoration:none;
+}
+
+
+.file-upload-image:hover{
+    transition:  0.4s ;
+    -webkit-filter: blur(2px); /* Safari 6.0 - 9.0 */
+    filter: blur(2px);
+
+}
+#photoChange, #photoChange1{
+    background-color: rgba(255,255,255, 0.3);
+    padding: 8px 10px;
+    opacity: 0.9;
+
+}
+
+#edit{
+    position: absolute;
+    z-index: 99;
+    display: block;
+    bottom:0;
+    right:5px;
+    padding:10px 20px;
+}
+
+.active-pink-textarea.md-form label.active {
+    color: #f48fb1;
+}
+.pink-textarea textarea.md-textarea:focus:not([readonly]) {
+    border-bottom: 1px solid #f48fb1;
+    box-shadow: 0 1px 0 0 #f48fb1;
+}
+.pink-textarea.md-form .prefix.active {
+    color: #f48fb1;
+}
+.active-pink-textarea.md-form textarea.md-textarea:focus:not([readonly])+label {
+    color: #f48fb1;
+}
+
+.active-amber-textarea.md-form label.active {
+    color: #ffa000;
+}
+.amber-textarea textarea.md-textarea:focus:not([readonly]) {
+    border-bottom: 1px solid #ffa000;
+    box-shadow: 0 1px 0 0 #ffa000;
+}
+.amber-textarea.md-form .prefix.active {
+    color: #ffa000;
+}
+.active-amber-textarea.md-form textarea.md-textarea:focus:not([readonly])+label {
+    color: #ffa000;
+}
+
+
+
+.active-amber-textarea-2 textarea.md-textarea {
+    border-bottom: 1px solid #ffa000;
+    box-shadow: 0 1px 0 0 #ffa000;
+}
+.active-amber-textarea-2.md-form label.active {
+    color: #ffa000;
+}
+.active-amber-textarea-2.md-form label {
+    color: #ffa000;
+}
+.active-amber-textarea-2.md-form .prefix {
+    color: #ffa000;
+}
+.active-amber-textarea-2.md-form textarea.md-textarea:focus:not([readonly])+label {
+    color: #ffa000;
+}
+
+.head{
+    background:rgba(40,57,101,.9);!important;
+    color: #aaaaaa;
+padding:10px;
+
+}
+.headers{
+    background:rgba(40,57,101,.9);!important;
+    color: #aaaaaa;!important;
+}
+.headers button{
+    color: #aaaaaa;!important;
+    text-decoration: none;
+
+}
+.button-text button{
+    font-size: 0.9em !important;
+
+}
+.button-text button:hover{
+    color: #aaaaaa;!important;
+    text-decoration: none;
+    transition: all 0.3s;
+
+
+}
+code{
+    background-color: rgba(238, 238, 238, 0.8);
+}
+.headers:hover{
+    background: rgba(40,57,101,.9);
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+li p{
+    color: #aaaaaa;
+}
+
+label.tip {
+
+    text-decoration: none
+}
+label.tip:hover {
+    cursor: help;
+    position: relative
+}
+
+.rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:30px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #ffc700;
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+
+.tiptext {
+    color:#069;
+    cursor:pointer;
+}
+
+.login-html .sign-in-htm,
+.login-html .sign-up-htm{
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    position:absolute;
+    transform:rotateY(180deg);
+    backface-visibility:hidden;
+    transition:all .4s linear;
+}
+.login-html .sign-in,
+.login-html .sign-up,
+.login-form .group .check{
+    display:none;
+}
+.login-html .tab,
+.login-form .group .label,
+.login-form .group .button{
+    text-transform:uppercase;
+}
+.login-html .tab{
+    font-size:22px;
+    margin-right:15px;
+    padding-bottom:5px;
+    margin:0 15px 10px 0;
+    display:inline-block;
+    border-bottom:2px solid transparent;
+}
+.login-html .sign-in:checked + .tab,
+.login-html .sign-up:checked + .tab{
+    color:#fff;
+    border-color:#1161ee;
+}
+.login-form{
+    min-height:345px;
+    position:relative;
+    perspective:1000px;
+    transform-style:preserve-3d;
+}
+.login-form .group{
+    margin-bottom:15px;
+}
+.login-form .group .label,
+.login-form .group .input,
+.login-form .group .button{
+    width:100%;
+    color:#fff;
+    display:block;
+}
+.login-form .group .input,
+.login-form .group .button{
+    border:none;
+    padding:15px 20px;
+    border-radius:25px;
+    background:rgba(255,255,255,.1);
+}
+.login-form .group input[data-type="password"]{
+    text-security:circle;
+    -webkit-text-security:circle;
+}
+.login-form .group .label{
+    color:#aaa;
+    font-size:12px;
+}
+.login-form .group .button{
+    background:#1161ee;
+}
+.login-form .group label .icon{
+    width:15px;
+    height:15px;
+    border-radius:2px;
+    position:relative;
+    display:inline-block;
+    background:rgba(255,255,255,.1);
+}
+.login-form .group label .icon:before,
+.login-form .group label .icon:after{
+    content:'';
+    width:10px;
+    height:2px;
+    background:#fff;
+    position:absolute;
+    transition:all .2s ease-in-out 0s;
+}
+.login-form .group label .icon:before{
+    left:3px;
+    width:5px;
+    bottom:6px;
+    transform:scale(0) rotate(0);
+}
+.login-form .group label .icon:after{
+    top:6px;
+    right:0;
+    transform:scale(0) rotate(0);
+}
+.login-form .group .check:checked + label{
+    color:#fff;
+}
+.login-form .group .check:checked + label .icon{
+    background:#1161ee;
+}
+.login-form .group .check:checked + label .icon:before{
+    transform:scale(1) rotate(45deg);
+}
+.login-form .group .check:checked + label .icon:after{
+    transform:scale(1) rotate(-45deg);
+}
+.login-html .sign-in:checked + .tab + .sign-up + .tab + .login-form .sign-in-htm{
+    transform:rotate(0);
+}
+.login-html .sign-up:checked + .tab + .login-form .sign-up-htm{
+    transform:rotate(0);
+}
+
+.search-sidebar{
+    background-color: rgba(40,57,101,.9);!important;
+    max-height: 100%;
+}
+#sidebar ul.components li{
+    max-height: 100%;
+}
+#floating-panel {
+    position: absolute;
+    top: 10px;
+    left: 35%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #999;
+    text-align: center;
+    line-height: 30px;
+    padding-left: 10px;
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/login.css}"/>
+
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+
+<script th:src="@{/js/login.js}"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<div class="topic justify-content-center sticky-top">
+    <div class="col-md-12 mb-3">
+        <nav class="navbar navbar-light bg-light sticky-top">
+
+            <h5>Information System for Journey Organisation</h5> </nav></div>
+
+
+</div>
+
+<div class="login-wrap mb-2">
+
+
+
+    <div class="login-html">
+        <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Sign In</label>
+        <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+        <div class="login-form">
+            <form style="margin-top:10px" action="#" method="post" th:action="@{/login}" th:object="${user}"
+                  enctype="multipart/form-data">
+                <div class="sign-in-htm">
+                    <div class="group">
+                        <label for="user" class="label">Username</label>
+                        <input th:field="*{username}" type="text" class="input">
+                    </div>
+                    <div class="group">
+                        <label for="passq" class="label">Password</label>
+                        <input id="passq" th:field="*{password}" type="password" required class="input" data-type="password">
+                    </div>
+
+                    <div class="group">
+                        <input type="submit" class="button" value="Sign in">
+                    </div>
+                    <div class="hr"></div>
+                    <div class="foot-lnk">
+                        <div class=""  style="color:whitesmoke"
+                             th:if="${param.error}"> Invalid username/password.
+                        </div>
+                        <br>
+
+                        <a href="#" th:if="${message}" th:text="${message}"></a>
+
+                        <br>
+                        <a class="text-decoration-none" href="javascript:displayRestore()">Forgot password</a>
+
+                    </div>
+                </div>
+            </form>
+
+            <form style="margin-top:10px" action="#" method="POST" th:action="@{/registerUser}" th:object="${user}"
+                  enctype="multipart/form-data">
+                <div class="sign-up-htm">
+                    <div class="group">
+                        <label for="user" class="label">Username</label>
+                        <input id="user" th:field="*{username}"  required type="text" class="input">
+                    </div>
+
+                    <div class="group">
+                        <label for="pass" class="label">Password</label>
+                        <input id="pass" th:field="*{password}" required type="password" class="input" data-type="password">
+                    </div>
+                    <div class="group">
+                        <label for="pass" class="label">Email Address</label>
+                        <input th:field="*{mail}" type="text" class="input">
+                    </div>
+
+
+                    <div class="group">
+                        <input type="submit" class="button" value="Sign up">
+                    </div>
+                    <div class="hr"></div>
+                    <div class="col-md-12">
+                        <div class="alert alert-success alert-dismissible" role="alert" th:if="${message}"
+                             th:text="${message.toString()}"></div>
+                    </div>
+                    <div class="foot-lnk">
+                        <label for="tab-1">Already Member?</a></label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div id="restore" class=" mt-2  justify-content-center  text-center" style="display: none;;
+">
+
+    <form class="form p-5"  style="background:rgba(40,57,101,.9)"action="#" method="POST" th:action="@{/forgot}" th:object="${user}">
+
+
+
+
+            <div class="justify-content-center">
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">Username</div>
+                    </div>
+                    <input type="text" class="form-control" th:field="*{username}">
+                </div>
+
+            </div>
+            <button class="btn btn-block btn-primary" type="submit" name="forgot" th:object="${user}"><strong>Restore</strong></button>
+
+
+    </form>
+</div>
+</div>
+
+
+</body>
+
+<script type="text/javascript">
+    function displayRestore() {
+        document.getElementById('restore').style.display = "block";
+    }
+</script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+</html>

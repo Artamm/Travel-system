@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Docs</title>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" th:href="@{/css/style4.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+    <link rel="icon" th:href="@{/images/logo.ico}" type="image/x-icon">
+
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/font-awesome/js/solid.js}"></script>
+    <script th:src="@{/webjars/font-awesome/js/fontawesome.js}"></script>
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.js}"></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <!-- Page Content  -->
+    <div id="content">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+            <div class="container-fluid">
+                <h5 class="titlebar">Documentation v.1.0.</h5>
+
+
+                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+                <a class="nav-link  " href="#">Top</a>
+
+
+                <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                    <ul class="nav navbar-nav ml-auto">
+
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/profile}"><img class="figure-img"
+                                                                                 th:src="@{${(user.thumbnail == null) ? '/images/nopic.png':'/profileImage/'+__${user.id}__ }}"
+                                                                                 th:alt="${#httpServletRequest.remoteUser}"
+                                                                                 style="height:19.2px;width: 16px"
+                                                                                 title="That's you"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/}"><span
+                                    class=" nav-item glyphicon glyphicon-home  black"
+                                    title="return to the start menu"></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link black" th:href="@{/logout}"><span
+                                    class=" nav-item glyphicon glyphicon-off black" title="sign out"></span></a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="head">
+                    <h4>User documentation</h4>
+                </div>
+                <div id="accordion">
+                    <div class="card ">
+                        <div class="card-header headers" id="JourneyCreate">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text" data-toggle="collapse"
+                                        data-target="#collapseOne"
+                                        aria-expanded="true" aria-controls="collapseOne">
+                                    Create Journey
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne" class="collapse collapsed" aria-labelledby="JourneyCreate"
+                             data-parent="#accordion">
+                            <div class="card-body">
+                                This function can be selected on the main page, all journeys breadcrumb or simply add
+                                this code <code class="code"><a href="/journey/new">/journey/new</a></code>
+                                <br>
+                                &#x25C8; &nbsp Title, start, end date and start position are required, other functions
+                                are optional.
+                                It's possible to create several journeys with the same title, so you do not need to come
+                                up with unique titles.
+                                <br>
+                                &#x25C8; &nbsp By default is set open journey for 1 person (you), so do not forget to
+                                check options
+                                here. Hover on object to get explanation.
+                                <br>
+                                <img th:src="@{/images/docs/create_journey_2.png}" class="img img-thumbnail"
+                                     style="max-height: 400px; width: 100%">
+                                <br>
+
+                                &#x25C8; &nbsp If you want to check your location or route on the map, you need to
+                                verify first that all locations have correct coordinates. To do this, you can type
+                                latitude an longitude by yourself (and use <a class="black text-decoration-none"
+                                                                              href="/coordinates"
+                                                                              target="_blank">
+                                <small><i class="fa fa-external-link-alt"
+                                          title="check coordinates (new window)"></i></small>
+                            </a>to check them) or you can let program automatically find them by address name by
+                                clicking on
+                                <button class="btn btn-secondary p-0 pl-1 pr-1"
+                                        name="coordinatesStartPosition"
+                                        title="Get coordinates by address. For custom locations"> Get coordinates
+                                </button>
+                                .
+                                Otherwise the result will be incorrect. Locations from the list get coordinates set
+                                automatically after you click
+                                <button class="btn btn-primary p-0 pl-1 pr-1">save changes</button>
+                                .
+                                <br>
+                                &#x25C8; &nbsp At last, when everything is set, you can include thumbnail (image format)
+                                for your journey and any format
+                                file. This file would be possible to download.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header headers" id="headingTwo">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text collapsed"
+                                        data-toggle="collapse" data-target="#collapseTwo"
+                                        aria-expanded="false" aria-controls="collapseTwo">
+                                    Edit and Delete Journey
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                &#x25C8; &nbsp Users can close and edit own journey. Deleting operation is available
+                                only to administrator.
+                                <br>
+                                &#x25C8; &nbsp To close journey open trip tab and select
+                                <button class="btn btn-danger pl-1 pr-1 p-0 ">Close</button>
+                                . You can also open <code><a href="/journey">journeys</a> </code> tab and select
+                                <button class="btn btn-danger pl-1 pr-1 p-0 "><span
+                                        class="glyphicon glyphicon-remove-sign" title="close event"> </span></button>
+                                near your journey.
+                                <br>
+                                &#x25C8; &nbsp To edit journey open your trip tab and select
+                                <button class="btn btn-success pl-1 pr-1  p-0">Edit activity</button>
+                                . You can also open <code><a href="/journey">journeys</a> </code> tab and select
+                                <button class="btn btn-success pl-1 pr-1  p-0"><span
+                                        class="glyphicon glyphicon-edit "></span></button>
+                                near your journey. The form to edit is the same as a form to create journey, except you
+                                also can see a list of already signed in participants and edit it as well. Applies for
+                                both type of journey.
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header headers" id="headingThree">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#collapseThree" aria-expanded="false"
+                                        aria-controls="collapseThree">
+                                    Create & Edit & Delete & Share Review
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                             data-parent="#accordion">
+                            <div class="card-body">
+                                &#x25C8; &nbsp All your reviews are available on <code><a
+                                    href="/reviews">/reviews</a></code> page.
+                                <br>
+                                &#x25C8; &nbsp You can find other reviews on each closed trip page (if they exist) or
+                                going directly by link for single review <code><a
+                                    href="#">/single/review/{id}</a></code>, where {id} is review's id. You can use this
+                                to share your review inside the system.
+                                <br>
+                                <img th:src="@{/images/docs/review_trip.png}" class="img img-thumbnail"
+                                     style="max-height: 400px; max-width: 100%">
+                                <br>
+                                &#x25C8; &nbsp You can edit and delete only own review. Even if you try to go directly
+                                by link and id, you won't pass and will be redirected to the main page.
+
+                                <br>
+                                &#x25C8; &nbsp If you plan to add tags to your review , upload image last - this will guarantee, that it will be saved correctly.
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header headers" id="heading4">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#collapse4" aria-expanded="false"
+                                        aria-controls="collapse4">
+                                    Profile change
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse4" class="collapse" aria-labelledby="heading4"
+                             data-parent="#accordion">
+                            <div class="card-body">
+                                &#x25C8; &nbsp Your profile is available on <code><a href="/profile">/profile</a></code>
+                                page.
+                                <br>
+                                &#x25C8; &nbsp Your can instantly preview image for your avatar, but to save it, do not forget to click on the button below it.
+                                page.
+                                <br>
+                                &#x25C8; &nbsp Hide contacts option means, that other users will be able to see only
+                                your username and e. mail address. Name, surname, phone and created journeys will be
+                                hidden from the profile page.
+                                <br>
+                                &#x25C8; &nbsp Send notifications option is to get updates in system on your e. mail
+                                address.
+                                <br>
+                               <b> Currently system sends in case of:</b>
+                                <br>
+                                &nbsp &nbsp &#9673; You're invited to journey
+                                <br>
+                                &nbsp &nbsp &#9673; Your request to join the journey is rejected
+                                <br>
+                                &nbsp &nbsp &#9673; Your request to join the journey is accepted
+                                <br>
+                                &nbsp &nbsp &#9673; Person you invited to join the journey rejected offer
+                                <br>
+                                &nbsp &nbsp &#9673; Person you invited to join the journey accepted offer
+                                <br>
+                                Also sends if user forgot password.
+                                <br>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header headers" id="heading5">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#collapse5" aria-expanded="false"
+                                        aria-controls="collapse5">
+                                    Search
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse5" class="collapse" aria-labelledby="heading5"
+                             data-parent="#accordion">
+                            <div class="card-body">
+
+                                &#x25C8; &nbsp Search by one parameter is available on page for each entity, on top of the list.
+                                <br>
+                                &#x25C8; &nbsp To remove search parameter you don't have to refresh page - just remove parameter and press search again.
+                                <br>
+                                &#x25C8; &nbsp Advanced search allows you to find journey and location by one or more parameters. To aceess that page, select either option in the sidebar or get <code><a href="/find">/find</a></code>
+                                <br>
+                                &#x25C8; &nbsp By default are shown all locations available for users and journeys that are in the system. Search form is in a popup, but if you want ot access your standard sidebar, just click on <code>PANEL</code> tab.
+                                <br>
+                                <img th:src="@{/images/docs/panel.png}" class="img img-thumbnail"
+                                     style="max-height: 400px; max-width: 100%">
+                                <br>
+                                &#x25C8; &nbsp Keep in mind that free search (by 1 parameter) ignores case, while search in form is case sensitive (but uses <a href="https://www.computerhope.com/jargon/w/wildcard.htm">wildcards</a>) and shows results if at least 1 or 2 parameters are match.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="col-md-6" sec:authorize="hasAuthority('ADMIN')">
+
+                <div class="head">
+                    <h4>Administrator documentation</h4>
+                </div>
+                <div id="accordion2">
+                    <div class="card ">
+                        <div class="card-header headers" id="JourneyCreate1">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text" data-toggle="collapse"
+                                        data-target="#collapseOne1"
+                                        aria-expanded="true" aria-controls="collapseOne1">
+                                    System deploying
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne1" class="collapse collapsed" aria-labelledby="JourneyCreate1"
+                             data-parent="#accordion2">
+                            <div class="card-body">
+                                <br>
+                                It is recommended to allow only experienced users to deploy the system.
+                                In the folder there is already .WAR file which is ready for deploying on server. In order to change database or SMTP settings, it is required to edit file <code>application.properties</code> (available path <code>travel/ui/src/main/resources</code>), and added dependency on database in model <code>pom.xml </code> file, if it does not exist (In project are used MySQL and Postgres dependencies).
+                                <br>
+                                <img th:src="@{/images/docs/properties.png}" class="img img-thumbnail"
+                                     style="max-height: 400px; width: 100%">
+                                <br>
+
+                                After that, re-build project using Maven (in command line command is <code>mvn package</code>)
+                                <br>
+                                <img th:src="@{/images/docs/maven.png}" class="img img-thumbnail"
+                                     style="max-height: 400px; width: 100%">
+                                <br>
+
+                                When files are set up according to database requirements, it is possible to run war file in command line (suitable for localhost). On remote server system can be deployed in 2 ways: initializing git in folder and pushing updates in <code>master</code> branch, or directly from web. In the last case, due to difference of hosts services deploying same war file may vary. Therefore, it is important to follow their instructions as well.Furthermore, some servers have restrictions and unique requirements for SMTP. Therefore, it is important to follow their instructions as well.
+                                <br>
+                                <b>Note:</b>
+                                <br>
+                                Some servers, like Heroku, may require file that specifies the commands that are executed by the app on startup. In that case, in file should be written the following code
+                                <br>
+                                <code>web: java -Dserver.port=$PORT $JAVA_OPTS -jar ui/target/ui-1.0-SNAPSHOT.jar</code>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header headers" id="heading6">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text collapsed"
+                                        data-toggle="collapse" data-target="#collapse6"
+                                        aria-expanded="false" aria-controls="collapse6">
+                                   Delete data from database
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse6" class="collapse" aria-labelledby="heading6" data-parent="#accordion2">
+                            <div class="card-body">
+                                &#x25C8; &nbsp Deleting operation is available
+                                only to administrator.
+                                <br>
+                                &#x25C8; &nbsp To delete entity, go to the Administrator's panel (available from <code><a href="/admin">/admin</a></code>), select entity's page and then remove data by clicking on button near it. System will automatically detach and remove all dependencies according to the requirements, that are mentioned in SRS.
+                                <br>
+                                <b>Note:</b>
+                                <br>
+                                &#x25C8; &nbsp Keep in mind, that if you delete location that is used in one or several journeys as a start position, it's going to be set empty value, and that may influence map or route display. In order to avoid that first remove journeys that have this start position. You can use search for it.
+                                <br>
+                                &#x25C8; &nbsp Same applies to the journey creator. If you delete user that created in one or several journeys , it's going to be set empty value. In order to avoid that first remove journeys that have this organizator. You can use search for it.
+                                <br>
+                                &#x25C8; &nbsp Reviews are removed automatically once journey is deleted.
+                                <br>
+                                &#x25C8; &nbsp Tags are detached from review that is going to be deleted
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header headers" id="heading7">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text collapsed"
+                                        data-toggle="collapse" data-target="#collapse7"
+                                        aria-expanded="false" aria-controls="collapse7">
+                                    Creating location
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse7" class="collapse" aria-labelledby="heading7" data-parent="#accordion2">
+                            <div class="card-body">
+                                &#x25C8; &nbsp Creating location that is seen for every user is available only for administrator role
+                                <br>
+                                &#x25C8; &nbsp To create location, go to the Administrator's panel (available from &nbsp; <code><a href="/admin">/admin</a></code>), select option "Create Location" or simply add &nbsp; <code><a href="/addDestination">/addDestination</a></code>
+                                <br>
+                                &#x25C8; &nbsp Location name and address are <b>required</b> attributes. Make sure they are set correctly.
+                                <br>
+                                &#x25C8; &nbsp Tags are optional, but if you add them, it'll be possible to find current location by tag and display other locations with the same tag (by clicking on it).
+                                <br>
+                                &#x25C8; &nbsp Coordinates are required for displaying location on the map. If you do not now exact coordinates, type address how you now it in "Address" and select    <button class="btn btn-secondary pl-1 pr-1 p-0 ">Get coordinates</button>
+                                <br>
+                                If such location exists, system will automatically set coordinates and country.
+                                <br>
+                                Additionally, it will show you information, such as full address name, position on the map and covid-2019 cases in the same country. Then, you can copy full address in input, or leave it the same - it's up to you.
+                                <b>Note:</b>
+                                <br>
+                                &#x25C8; &nbsp Keep in mind, that you can add image to location only after creating it and selecting to edit it.
+                                <br>
+                                &#x25C8; &nbsp Sometimes, during creation, display on the map can be inconsistent (due to changing inputs). But it won't be a problem after you save location - after that display will be fine.
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-header headers" id="heading8">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text collapsed"
+                                        data-toggle="collapse" data-target="#collapse8"
+                                        aria-expanded="false" aria-controls="collapse8">
+                                    Creating user
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse8" class="collapse" aria-labelledby="heading8" data-parent="#accordion2">
+                            <div class="card-body">
+                                &#x25C8; &nbsp Creating user is available only for administrator role
+                                <br>
+                                &#x25C8; &nbsp To create user, go to the Administrator's panel (available from &nbsp; <code><a href="/admin">/admin</a></code>), select option "Create user" or simply add &nbsp; <code><a href="/register">/register</a></code>
+                                <br>
+                                &#x25C8; &nbsp Username and e.mail are only <b>required</b> attributes. Yes, you can create user without password (simple users during registration can't do this)
+                                <br>
+                               Note, that you  <b>can't create user if:</b>
+                                <br>
+                                &#x25C8; &nbsp User with the same username exists in the DB.
+                                <br>
+                                &#x25C8; &nbsp User with the same e. mail exists in the DB.
+                                <br>
+                                System will inform you whether operation was successful or failed.
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header headers" id="heading9">
+                            <h5 class="mb-0 button-text ">
+                                <button class="btn btn-link btn-block text-left  white-text collapsed"
+                                        data-toggle="collapse" data-target="#collapse9"
+                                        aria-expanded="false" aria-controls="collapse9">
+                                    Edit data from the DB
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse9" class="collapse" aria-labelledby="heading9" data-parent="#accordion2">
+                            <div class="card-body">
+
+                                &#x25C8; &nbsp To edit data, go to the Administrator's panel (available from &nbsp; <code><a href="/admin">/admin</a></code>), select entity, which you want to edit. After page is opened, select "Edit" button near location/user/destination or tag which you want to edit.
+                                <br> It'll redirect you on other pages, where you can start modyfing content. The only exception is tag and review editing - in that case clicking on button triggers modal window.
+                                <br>
+                                &#x25C8; &nbsp For journeys, it's not necessary to go to admin panel. You can select a trip, and click on button &nbsp; <button class="btn btn-secondary pl-1 pr-1 p-0 ">Edit activity</button>. If you're participant in this journey and can see it in your list of journeys, you can also edit it by clicking on the button near it.
+
+                            </div>
+                    </div>
+
+
+
+                </div>
+
+
+
+            </div>
+
+
+        </div>
+        <div class="line"></div>
+
+
+        <div class="row">
+
+
+        </div>
+        <div class="line"></div>
+
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+        });
+    });
+</script>
+</body>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</html>

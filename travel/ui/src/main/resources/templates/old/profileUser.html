@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile page</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/js/profile.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/dist/umd/popper.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+
+
+</head>
+<body class=" container-fluid">
+
+<div class="row header navbar mb-2 ">
+    <div class="col-md-2 col-sm-4">
+        <div>
+            <img class="nav-item img-fluid" alt="logo" src="/images/logo.png" style="height: 40px;">
+            TiS
+        </div>
+    </div>
+    <div class="offset-md-8 offset-sm-0 col-md-2 col-sm-8  text-right align-content-end">
+        <img class="figure-img" th:src="@{'/profileImage/' }" th:alt="${#httpServletRequest.remoteUser}"
+             style="height:19.2px;width: 16px" title="That's you">
+        <span class=" nav-item glyphicon glyphicon-home headerpanel" title="return to the start menu"></span>
+        <span class=" nav-item glyphicon glyphicon-question-sign headerpanel" title="information for users"></span>
+        <a th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off headerpanel" title="sing out"></span></a>
+    </div>
+</div>
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/profile">Profile</a></li>
+
+    </ol>
+</nav>
+
+<div class="row main-body">
+    <div class="col-xs-12 col-md-2 menu-bar">
+        <div id="photoChange" class="mt-2">
+            <div class=" text-center image-upload p-2">
+
+                    <img class="card-img rounded-circle file-upload-image" id="blah"
+                                                 th:src="@{'/profileImage/'+${user.id} }"
+                                                 style="max-width: 150px; max-height: 150px"
+                                                 th:alt="${#httpServletRequest.remoteUser}" title="That's user">
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <div class="col-md-10 col-xs-12">
+        <div class="head">
+            <h4>Personal information</h4>
+        </div>
+        <div th:object="${user}">
+            <form class="mb-2 col-md-6">
+                <table class="table table-sm">
+                    <tbody>
+                    <tr>
+                        <td><label for="1" class="label">Username:</label></td>
+                        <td><input class="disabled" id="1" type="text" readonly th:field="${user.username}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label for="2" class="label secondary-label">Name: </label>
+                        </td>
+                        <td>
+                            <input class=" disabled" id="2" type="text" readonly th:field="${user.name}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <label class="label">Surname:</label>
+                        </td>
+                        <td>
+                            <input type="text" readonly th:field="${user.surname}">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </form>
+            <div class="head">
+                <h4>Contact information:</h4>
+            </div>
+
+                <table class="table table-sm">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <label>E. mail:</label>
+                        </td>
+                        <td>
+                            <input type="email" th:field="*{mail}"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label>Phone:</label>
+                        </td>
+                        <td>
+                            <input type="tel" th:field="*{phone}"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+        </div>
+
+    </div>
+
+
+</div>
+<button onclick="topFunction()" style="z-index: 99; position: absolute; bottom:0;right: 10px" id="top" title="Go to top">Top</button>
+
+</body>
+
+</html>

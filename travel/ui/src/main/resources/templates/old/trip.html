@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile page</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap-glyphicons/css/bootstrap-glyphicons.css}">
+
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+
+
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/dist/umd/popper.js}"></script>
+
+    <link rel="stylesheet" th:href="@{/css/main_style.css}"/>
+
+
+</head>
+<body class="container-fluid">
+
+
+<div class="row header navbar mb-2 ">
+    <div class="col-md-2 col-sm-4">
+        <div>
+            <img class="nav-item img-fluid" alt="logo" src="/images/logo.png" style="height: 40px;">
+            TiS
+        </div>
+    </div>
+    <div class="offset-md-8 offset-sm-0 col-md-2 col-sm-8  text-right align-content-end">
+        <img class="figure-img" th:src="@{'/profileImage/' }" th:alt="${#httpServletRequest.remoteUser}"
+             style="height:19.2px;width: 16px" title="That's you">
+        <span class=" nav-item glyphicon glyphicon-home headerpanel" title="return to the start menu"></span>
+        <span class=" nav-item glyphicon glyphicon-question-sign headerpanel" title="information for users"></span>
+        <a th:href="@{/logout}"><span class=" nav-item glyphicon glyphicon-off headerpanel" title="sing out"></span></a>
+    </div>
+</div>
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item"><a href="/profile">Profile</a></li>
+
+    </ol>
+</nav>
+
+<div class="row main-body" th:object="${trip}">
+    <div class="col-xs-12 col-md-3 menu-bar">
+        <div class="">
+            <div class="card image-upload p-2">
+                <img id="blah" class="img-fluid img-thumbnail"
+                     th:src="@{${(trip.thumbnail !=null) ? '/tripImage/'+ '__${trip.id}__' : '/images/ava1.jpg'}}"
+                     alt="profileImage" style="width:100%">
+            </div>
+            <div class="mt-2 align-content-center justify-content-center text-center">
+                <p th:if="${trip.getPeople().contains(user)}">You have already signed for this journey</p>
+                <form method="post" th:object="${trip}" th:action="@{'/signOff/'+${trip.id}}">
+                    <button type="submit" th:if="${trip.getPeople().contains(user) and trip.active}"
+                            class="btn btn-outline-danger">Decline
+                    </button>
+                </form>
+            </div>
+            <div class="mt-2 align-content-center justify-content-center text-center">
+                <p th:if="${! trip.getPeople().contains(user)}">You're not signed for this journey.</p>
+                <p th:if="${! trip.getPeople().contains(user) and trip.byInvitation ==true }">This trip is by
+                    invitations. You can send request to add you in the list</p>
+
+                <form th:action="@{'/sendRequest/'+${trip.id}}" method="post">
+                <button type="submit" th:if="${! trip.getPeople().contains(user) and trip.byInvitation==true}"
+                        class="btn btn-outline-info">Request
+                </button>
+                </form>
+                <form th:action="@{'/applyForTrip/'+${trip.id}}" method="post">
+                <button type="submit" th:if="${! trip.getPeople().contains(user) and trip.byInvitation!=true}"
+                        class="btn btn-outline-success">Apply
+                </button></form>
+                <p th:if="${trip.premoderated and ! trip.organizator.equals(user)}">
+                    <small>This journey is pre-moderated, so author will have to accept your request first</small>
+                </p>
+                <form th:action="@{'/closeJourney/'+ ${trip.id}}" method="post">
+                    <button type="submit" class="btn btn-outline-danger"
+                            th:if="${trip.organizator.equals(user) and trip.active == true}">Close journey
+                    </button>
+                </form>
+                <p th:if="${!trip.active}">The journey is closed. You can't sign or edit it</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9 col-xs-12">
+        <div class="head">
+            <h4>General information</h4>
+        </div>
+        <div>
+            <div class="mb-2 col-md-6 ">
+                <table class="table table-sm">
+                <tr>
+                    <td>
+                        Title:
+                    </td>
+
+                    <td>
+                        <input th:field="${trip.title}" type="text" readonly>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Start date:
+                    </td>
+
+                    <td>
+                        <input th:field="${trip.start_date}" type="date" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        End date:
+                    </td>
+
+                    <td>
+                        <input th:field="${trip.end_date}" type="date" readonly>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        Estimated time:
+                    </td>
+
+                    <td>
+                        <input th:field="${trip.title}" type="text" readonly>
+                    </td>
+                </tr>
+                </table>
+
+        </div>
+        <div class="head">
+            <h4>Description</h4>
+        </div>
+        <div class="mb-2">
+            <div class="col-md-12 mb-1"><p th:text="${trip.description}"></p></div>
+        </div>
+    </div>
+
+    <div class="head">
+        <h4>Participants</h4>
+    </div>
+
+    <div class="mb-2 col-md-6">
+        <table class="table table-sm">
+            <thead class="thead-light">
+            <th scope="col">#</th>
+            <th scope="col">Participant</th>
+            <th scope="col">Contact mail:</th>
+            <th scope="col"> </th>
+
+            </thead>
+            <tr th:if="${!trip.getPeople().contains(user)}">
+                <div class="mt-4  text-center">
+                    <img alt="bonfire" src="/images/logo.png">
+                    <p>You can't see other people unless you're participant</p>
+                </div>
+
+            </tr>
+            <tr th:if="${trip.getPeople().contains(user)}" th:each="participant, rowIndex :${trip.people}">
+                <td><p th:text="'#'+${rowIndex.index+1}"></p></td>
+                <td><input type="text" th:field="${trip.people[__${rowIndex.index}__].username}" readonly></td>
+                <td><label><input type="text" th:field="${trip.people[__${rowIndex.index}__].mail}" readonly></label>
+                    <td><a th:href="@{'/profileUser/'+${trip.people[__${rowIndex.index}__].username}}"><span class="glyphicon glyphicon-eye-open"></span> </a>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="head">
+        <h4>Destination(s)</h4>
+    </div>
+    <div class="mb-2  col-md-6">
+        <table>
+        <tr th:if="${!trip.getPeople().contains(user)}">
+            <div class="mt-4  text-center">
+                <img alt="bonfire" src="/images/logo.png">
+                <p>You can't see other people unless you're participant</p>
+            </div>
+
+        </tr>
+        </table>
+        <table th:if="${trip.getPeople().contains(user)}" class="table table-sm">
+            <tr>
+                <td><label>Start position:</label></td>
+                <td>
+                    <input type="text" readonly th:value="${trip.start_position.coordinates}">
+                </td>
+            </tr>
+
+            <thead class="thead-light">
+            <th scope="col">#</th>
+            <th scope="col">Destination</th>
+            </thead>
+            <tr th:each="destination, rowIndex :${trip.route}">
+                <th><p th:text="${rowIndex.index+1}"></p></th>
+                <td><input type="text" th:field="${trip.route[__${rowIndex.index}__].coordinates}" readonly></td>
+            </tr>
+        </table>
+
+    </div>
+
+
+    <div class="head">
+        <h4>Tag(s)</h4>
+    </div>
+    <div class="mb-2 col-md-6 flex-column flex-fill flex-wrap">
+        <div th:each="tag, rowIndex :${trip.tags}" class="tags">
+            <a th:text="'#'+${trip.tags[ __${rowIndex.index}__].tag}"></a>
+        </div>
+
+    </div>
+</div>
+
+
+</div>
+<button onclick="topFunction()" id="top" title="Go to top">Top</button>
+<button class="btn   btn-outline-success" th:if="${trip.organizator.equals(user)}" id="edit"><span
+        class="glyphicon glyphicon-edit "></span></button>
+
+</body>
+</html>
