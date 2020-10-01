@@ -11,7 +11,13 @@ Journeys can be:
 <img src="/images/2.PNG" width="75%">
 
 
-To show information about location are used [OpenStreetMap](https://www.openstreetmap.org) and [LeafletJS](https://leafletjs.com/). For complex route and directions is used [Google Maps API](cloud.google.com)  
+To show information about location are used [OpenStreetMap](https://www.openstreetmap.org) and [LeafletJS](https://leafletjs.com/). For complex route and directions is used [Google Maps API](cloud.google.com). Information about covid numbers is used from ARCGIS json file.
 
 <br>
 <img src="/images/3.PNG" width="75%">
+
+Additional functions/aspects:
+- 2 roles, user and admin.
+- Advanced search by parameters. 
+- Possibility to write review, comments.
+- Embedded documentation
