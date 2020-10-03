@@ -1,5 +1,5 @@
 # Travel-system
-Spring Boot web system for groups to plan journey/activity. 
+Spring Boot web system for groups to plan journey/activity and display route with directions on maps. 
 <br>
 <img src="/images/1.PNG" width="75%">
 
